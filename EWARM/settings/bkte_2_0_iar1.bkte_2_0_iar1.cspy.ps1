@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\MyProjects\БКТЭ-117\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.general.xcl" --backend -f "C:\MyProjects\БКТЭ-117\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\MyProjects\Project 121\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.general.xcl" --backend -f "C:\MyProjects\Project 121\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\MyProjects\БКТЭ-117\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.general.xcl" --debug_file=$debugfile --backend -f "C:\MyProjects\БКТЭ-117\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\MyProjects\Project 121\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.general.xcl" --debug_file=$debugfile --backend -f "C:\MyProjects\Project 121\117_bkte\EWARM\settings\bkte_2_0_iar1.bkte_2_0_iar1.driver.xcl" 
 }

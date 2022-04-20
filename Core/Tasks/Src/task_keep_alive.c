@@ -1,15 +1,14 @@
 #include "../Tasks/Inc/task_keep_alive.h"
 
 #include "../Tasks/Inc/task_iwdg.h"
-#include "../Utils/Inc/utils_flash.h"
-#include "../Utils/Inc/utils_pckgs_manager.h"
+#include "utils_flash.h"
+#include "utils_pckgs_manager.h"
 
 extern u16 iwdgTaskReg;
 
-extern osThreadId keepAliveHandle;
-extern osThreadId getTempHandle;
-extern osThreadId getEnergyHandle;
-// extern osThreadId loraHandle;
+extern osThreadId    keepAliveHandle;
+extern osThreadId    getTempHandle;
+extern osThreadId    getEnergyHandle;
 extern osThreadId    wirelessSensHandle;
 extern osTimerId     timerPowerOffHandle;
 extern osMutexId     mutexWriteToEnergyBufHandle;
@@ -19,12 +18,8 @@ extern osMutexId     mutexSDHandle;
 extern osMutexId     mutexSpiFlashHandle;
 extern osSemaphoreId semCreateWebPckgHandle;
 
-extern CircularBuffer circBufAllPckgs;
 extern u8             isRxNewFirmware;
-// extern CircularBuffer circBufPckgEnergy;
-// extern u8 SZ_PCKGENERGY;
-
-// static PckgEnergy curPckgEnergy;
+extern CircularBuffer circBufAllPckgs;
 
 u8 bufTxData[256];
 
@@ -35,25 +30,25 @@ void taskKeepAlive(void const* argument) {
     for (;;) {
         HAL_GPIO_TogglePin(LED1G_GPIO_Port, LED1G_Pin);
         if (!(timeout % 6000) && !isRxNewFirmware) {
-            D(printf("\r\nsendMsgTaskStat\r\n\r\n"));
+            LOG(LEVEL_MAIN, "sendMsgStatistics\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
-            sendMsgTaskStat();
+            sendMsgStatistics();
             osTimerStop(timerPowerOffHandle);
         }
         if (!(timeout % 600) && !isRxNewFirmware) {
-            D(printf("\r\ngetNumFirmware\r\n\r\n"));
+            LOG(LEVEL_MAIN, "getBKTENumFw\r\n\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
             getNumFirmware();
             osTimerStop(timerPowerOffHandle);
         }
         if (!(timeout % 6000) && !isRxNewFirmware) {
-            D(printf("\r\ngenerateMsgKeepAlive\r\n\r\n"));
+            LOG(LEVEL_MAIN, "\r\ngenerateMsgKeepAlive\r\n\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
             generateMsgKeepAlive();
             osTimerStop(timerPowerOffHandle);
         }
         if (!(timeout % 36000) && !isRxNewFirmware) {
-            D(printf("\r\nupdRTC\r\n\r\n"));
+            LOG(LEVEL_MAIN, "updRTC\r\n\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
             updRTC();
             osTimerStop(timerPowerOffHandle);
@@ -74,7 +69,7 @@ void taskKeepAlive(void const* argument) {
 }
 
 void timerPowerOff_callback(void const* argument) {
-    D(printf("\r\nTIMER POWER OFF\r\n\r\n"));
+    LOG_PWR(LEVEL_INFO, "\r\nTIMER POWER OFF\r\n\r\n");
     HAL_GPIO_WritePin(BAT_PWR_EN_GPIO_Port, BAT_PWR_EN_Pin, GPIO_PIN_RESET);  // OFF
     osDelay(1000);
     NVIC_SystemReset();
@@ -102,7 +97,6 @@ void pwrOffBkte() {
 
     vTaskSuspend(getEnergyHandle);
     vTaskSuspend(getTempHandle);
-    // vTaskSuspend(loraHandle);
     vTaskSuspend(wirelessSensHandle);
 
     osMutexRelease(mutexWriteToEnergyBufHandle);
@@ -112,12 +106,12 @@ void pwrOffBkte() {
     osMutexRelease(mutexWebHandle);
 
     osDelay(2000);
-    D(printf("OK: PWR OFF START\r\n"));
+    LOG_PWR(LEVEL_INFO, "PWR OFF START\r\n");
     // cBufReset(&circBufPckgEnergy);
 
     bkte.pwrInfo.adcVoltBat = getAdcVoltBat();
     generateMsgBat();
-    D(printf("OK: PWR OFF WAIT: %d\r\n", getUnixTimeStamp()));
+    LOG_PWR(LEVEL_INFO, "PWR OFF WAIT: %d\r\n", getUnixTimeStamp());
 
     curTime = 0;
     delayPages = getDelayPages();
@@ -130,7 +124,7 @@ void pwrOffBkte() {
         if (curTime > 300000) {
             bkte.isTCPOpen = 0;
             if (sendMsgDevOffValue(11) != SUCCESS) {
-                D(printf("ERROR: Send dev off val\r\n"));
+                LOG_PWR(LEVEL_ERROR, "Send dev off val\r\n");
             }
             break;
         }
@@ -145,7 +139,7 @@ void pwrOffBkte() {
         if (curTime > 300000) {
             bkte.isTCPOpen = 0;
             if (sendMsgDevOffValue(12) != SUCCESS) {
-                D(printf("ERROR: Send dev off val\r\n"));
+                LOG_PWR(LEVEL_ERROR, "Send dev off val\r\n");
             }
             break;
         }
@@ -154,7 +148,7 @@ void pwrOffBkte() {
     bkte.pwrInfo.adcVoltBat = getAdcVoltBat();
     generateMsgBat();
     generateMsgDevOff();
-    D(printf("OFF  VOLT: %d\r\n", bkte.pwrInfo.adcVoltBat));
+    LOG_PWR(LEVEL_INFO, "OFF  VOLT: %d\r\n", bkte.pwrInfo.adcVoltBat);
 
     updSpiFlash(&circBufAllPckgs);
     osSemaphoreRelease(semCreateWebPckgHandle);
@@ -170,7 +164,7 @@ void pwrOffBkte() {
         if (curTime > 300000) {
             bkte.isTCPOpen = 0;
             if (sendMsgDevOffValue(13) != SUCCESS) {
-                D(printf("ERROR: Send dev off val\r\n"));
+                LOG_PWR(LEVEL_ERROR, "Send dev off val\r\n");
             }
             break;
         }
@@ -180,7 +174,7 @@ void pwrOffBkte() {
         sdUpdLog(&sdSectorLogs);
     }
 
-    D(printf("OK: PWR OFF SENT TELEMETRY: %d\r\n", getUnixTimeStamp()));
+    LOG_PWR(LEVEL_INFO, "PWR OFF SENT TELEMETRY: %d\r\n", getUnixTimeStamp());
 
     sprintf(strVolts, "%03d", bkte.pwrInfo.adcVoltBat);
     sdWriteLog(SD_MSG_OFF_BKTE, SD_LEN_OFF_BKTE, strVolts, 3, &sdSectorLogs);
@@ -217,6 +211,14 @@ void generateMsgBat() {
     saveTelemetry(&pckgTel, &circBufAllPckgs);
 }
 
+void generateMsgFWUpdated() {
+    PckgTelemetry pckgTel;
+    pckgTel.group = TEL_GR_HARDWARE_STATUS;
+    pckgTel.code = TEL_CD_HW_UPDATED;
+    pckgTel.data = bkte.idNewFirmware;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+}
+
 void generateMsgDevOff() {
     PckgTelemetry pckgTel;
     pckgTel.group = TEL_GR_HARDWARE_STATUS;
@@ -225,27 +227,59 @@ void generateMsgDevOff() {
     saveTelemetry(&pckgTel, &circBufAllPckgs);
 }
 
-ErrorStatus sendMsgFWUpdated() {
+ErrorStatus sendMsgDevOn() {
     ErrorStatus   ret = SUCCESS;
     PckgTelemetry pckgTel;
     u8            ptr = 0;
+    u32           tmp;
 
-    D(printf("sendMsgFWUpdated\r\n"));
+    LOG(LEVEL_MAIN, "sendMsgDevOn\r\n");
 
-    memset(bufTxData, 0, 64);
+    memset(bufTxData, 0, 128);
+    pckgTel.group = TEL_GR_GENINF;
+    pckgTel.code = TEL_CD_GENINF_NUM_FIRMWARE;
+    pckgTel.data = BKTE_ID_FIRMWARE;
+    pckgTel.unixTimeStamp = getUnixTimeStamp();
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+
+    pckgTel.code = TEL_CD_GENINF_NUM_BOOT;
+    pckgTel.data = bkte.info.idBoot;
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+
+    pckgTel.group = TEL_GR_HARDWARE_STATUS;
+    pckgTel.code = TEL_CD_HW_BKTE;
+    pckgTel.data = 1;
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+
+    pckgTel.code = TEL_CD_HW_UPDATE_ERR;
+    tmp = getFlashData(FLASH_ADDR_ERR_NEW_FIRMWARE);
+    if (tmp > 10) tmp = 0;
+    pckgTel.data = tmp;
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr, (u8*)&bkte.idMCU);
+
+    return ret;
+}
+
+ErrorStatus sendMsgFWUpdated() {
+    ErrorStatus   ret = SUCCESS;
+    PckgTelemetry pckgTel;
+
+    LOG(LEVEL_MAIN, "sendMsgFWUpdated\r\n");
+
+    memset(bufTxData, 0, 20);
     pckgTel.group = TEL_GR_HARDWARE_STATUS;
     pckgTel.code = TEL_CD_HW_UPDATED;
     pckgTel.data = bkte.idNewFirmware;
     pckgTel.unixTimeStamp = getUnixTimeStamp();
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = TEL_CD_HW_UPDATE_LEN;
-    pckgTel.data = bkte.szNewFirmware;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+    copyTelemetry(bufTxData, &pckgTel);
+
     pckgTel.code = TEL_CD_HW_BKTE;
     pckgTel.data = 0;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY], &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * 2, 2, (u8*)&bkte.idMCU);
 
     return ret;
 }
@@ -255,10 +289,10 @@ ErrorStatus sendMsgTaskStat() {
     PckgTelemetry pckgTel;
     u8            ptr = 0;
 
-    D(printf("sendMsgTaskStat\r\n"));
+    LOG_PWR(LEVEL_INFO, "sendMsgTaskStat\r\n");
 
     memset(bufTxData, 0, 256);
-    pckgTel.group = TEL_GR_TASK_STAT;
+    pckgTel.group = TEL_GR_BKTE_STAT;
     pckgTel.unixTimeStamp = getUnixTimeStamp();
     pckgTel.code = TEL_CD_TASK_CR_WEB;
     pckgTel.data = bkte.stat.cr_web;
@@ -281,12 +315,6 @@ ErrorStatus sendMsgTaskStat() {
     pckgTel.code = TEL_CD_TASK_WIRELESS;
     pckgTel.data = bkte.stat.wireless;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = 8;
-    pckgTel.data = bkte.stat.pgWrBad;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = 9;
-    pckgTel.data = bkte.stat.pgRdBad;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
     // pckgTel.group = TEL_GR_HARDWARE_STATUS;
     // pckgTel.code = (u8)14;
@@ -297,7 +325,7 @@ ErrorStatus sendMsgTaskStat() {
     // pckgTel.data = spiFlash64.tailNumPg;
     // copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr, (u8*)&bkte.idMCU);
 
     return ret;
 }
@@ -307,7 +335,7 @@ ErrorStatus sendMsgFWUpdateBegin() {
     PckgTelemetry pckgTel;
     u8            ptr = 0;
 
-    D(printf("sendMsgFWUpdated\r\n"));
+    LOG(LEVEL_MAIN, "sendMsgFWUpdated\r\n");
 
     memset(bufTxData, 0, 64);
     pckgTel.group = TEL_GR_HARDWARE_STATUS;
@@ -319,7 +347,7 @@ ErrorStatus sendMsgFWUpdateBegin() {
     pckgTel.data = bkte.szNewFirmware;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr, (u8*)&bkte.idMCU);
 
     return ret;
 }
@@ -335,7 +363,7 @@ ErrorStatus sendMsgDevOff() {
     pckgTel.unixTimeStamp = getUnixTimeStamp();
     copyTelemetry(bufTxData, &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY, 1);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY, 1, (u8*)&bkte.idMCU);
 
     return ret;
 }
@@ -351,7 +379,83 @@ ErrorStatus sendMsgDevOffValue(u32 val) {
     pckgTel.unixTimeStamp = getUnixTimeStamp();
     copyTelemetry(bufTxData, &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY, 1);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY, 1, (u8*)&bkte.idMCU);
+
+    return ret;
+}
+
+ErrorStatus sendMsgStatistics() {
+    ErrorStatus   ret = SUCCESS;
+    PckgTelemetry pckgTel;
+
+    memset(bufTxData, 0, 256);
+
+    pckgTel.group = TEL_GR_PROJECT_MEM;
+    pckgTel.code = TEL_CD_BKTE_PAGE_WR;
+    pckgTel.data = bkte.stat.pageWrCount;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_BKTE_PAGE_RD;
+    pckgTel.data = bkte.stat.pageRdCount;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_BKTE_PAGE_BAD;
+    pckgTel.data = bkte.stat.pageBadCount;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.group = TEL_GR_SIMCOM;
+    pckgTel.code = TEL_CD_SIM_SEND;
+    pckgTel.data = bkte.stat.simSendCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_ERR;
+    pckgTel.data = bkte.stat.simErrCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_RESET;
+    pckgTel.data = bkte.stat.simResetCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_OPEN;
+    pckgTel.data = bkte.stat.simOpenCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_BAD_CSQ;
+    pckgTel.data = bkte.stat.simBadCsqCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_LOW_CSQ;
+    pckgTel.data = bkte.stat.simLowCsqCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_GOOD_CSQ;
+    pckgTel.data = bkte.stat.simGoodCsqCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_HIGH_CSQ;
+    pckgTel.data = bkte.stat.simHighCsqCnt;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_TIME_OPEN;
+    pckgTel.data = bkte.timers.tcp_open_time / 1000;
+    bkte.timers.tcp_open_time = 0;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_TIME_CLOSE;
+    pckgTel.data = bkte.timers.tcp_close_time / 1000;
+    bkte.timers.tcp_close_time = 0;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_TIME_SEND;
+    pckgTel.data = bkte.timers.tcp_send_time / 1000;
+    bkte.timers.tcp_send_time = 0;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_SIM_TIME_ALL;
+    bkte.timers.tcp_all_time = HAL_GetTick() - bkte.timers.tcp_all_time;
+    pckgTel.data = bkte.timers.tcp_all_time / 1000;
+    bkte.timers.tcp_all_time = HAL_GetTick();
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
 
     return ret;
 }
@@ -431,7 +535,7 @@ ErrorStatus sendInitTelemetry() {
     pckgTel.data = spiFlash64.tailNumPg;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr);
+    ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr, (u8*)&bkte.idMCU);
 
     return ret;
 }

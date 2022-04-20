@@ -8,14 +8,14 @@
 #ifndef INC_UTILS_BKTE_H_
 #define INC_UTILS_BKTE_H_
 
-#include "../Drivers/Inc/ds2482.h"
-#include "../Drivers/Inc/simcom.h"
-#include "../Drivers/Inc/spiflash.h"
-#include "../Utils/Inc/circularBuffer.h"
 #include "FreeRTOS.h"
+#include "circularBuffer.h"
 #include "cmsis_os.h"
+#include "ds2482.h"
 #include "fatfs.h"
 #include "main.h"
+#include "simcom.h"
+#include "spiflash.h"
 #include "stdlib.h"
 #include "time.h"
 #include "usart.h"
@@ -135,26 +135,53 @@ typedef struct {
     u32 web_exchng;
     u32 wireless;
 
-    u32 pgWrBad;
-    u32 pgRdBad;
-} task_stat_t;
+    u32 pageWrCount;
+    u32 pageRdCount;
+    u32 pageBadCount;
+
+    u32 simSendCnt;
+    u32 simErrCnt;
+    u32 simResetCnt;
+    u32 simOpenCnt;
+    u32 simBadCsqCnt;
+    u32 simLowCsqCnt;
+    u32 simGoodCsqCnt;
+    u32 simHighCsqCnt;
+
+    u32 queueErrCount;
+} statistics_t;
+
+typedef struct {
+    u32 tcp_open_time;
+    u32 tcp_close_time;
+    u32 tcp_send_time;
+    u32 tcp_all_time;
+} time_stat_t;
 
 typedef struct {
     u8             isOwActive[BKTE_MAX_CNT_1WIRE];
-    u32            idMCU[3];
     HardWareStatus hwStat;
     PWRInfo        pwrInfo;
     ErrorFlags     erFlags;
     u8             isSentData;
     u8             isTCPOpen;
-    u8             tcpErrCnt;
     u8             csq;
-    u8             idNewFirmware;
-    u32            szNewFirmware;
     u8             isSpiFlashReady;
     LastData       lastData;
-    task_stat_t    stat;
-    //	FInfo	fInfo[NUM_READ_FILES];
+
+    u8 idBoot;
+    u8 idFirmware;
+    u8 idNewFirmware;
+    u8 szNewFirmware;
+
+    u64 imei;
+    u8  niacIdent[40];
+    u32 idMCU[3];
+    u8  server;
+
+    FIRMWARE_INFO info;
+    time_stat_t   timers;
+    statistics_t  stat;
 } BKTE;
 
 typedef enum { NUM_FILE_ENERGY = 0,
@@ -162,9 +189,28 @@ typedef enum { NUM_FILE_ENERGY = 0,
                NUM_FILE_RSSI } NUM_FILE;
 
 typedef enum {
+    CMD_DATA_VOLTAMPER = 1,
+    CMD_DATA_ENERGY,
+    CMD_DATA_TEMP,
+    CMD_DATA_GRMC,
+    CMD_DATA_TELEMETRY = 5,
+    CMD_DATA_VOLTAMPER_127,
+    CMD_DATA_ENERGY_127,
+    CMD_DATA_PERCRSSI_127,
+    CMD_DATA_DOORS,
+    CMD_DATA_GEO_PLUS
+} CMD_DATA_TYPE;
+
+typedef enum {
     TEL_GR_GENINF = 1,
     TEL_GR_HARDWARE_STATUS,
-    TEL_GR_TASK_STAT
+    TEL_GR_PROJECT,
+    TEL_GR_PROJECT_STAT,
+    TEL_GR_PROJECT_MEM,
+    TEL_GR_SIMCOM,
+    TEL_GR_PROJECT_RADIO_STAT,
+    TEL_GR_BKTE_STAT,
+    TEL_GR_COMMON = 0x10
 } TELEMETRY_GROUP;
 
 typedef enum {
@@ -202,11 +248,34 @@ typedef enum {
 } TELEMETRY_CODE_TASK_STAT;
 
 typedef enum {
-    CMD_DATA_VOLTAMPER = 1,
-    CMD_DATA_ENERGY,
-    CMD_DATA_TEMP,
-    CMD_DATA_TELEMETRY = 5
-} CMD_DATA;
+    TEL_CD_IU_PAGE_WR = 1,
+    TEL_CD_IU_PAGE_RD,
+    TEL_CD_IU_PAGE_BAD,
+    TEL_CD_BKTE_PAGE_WR = 4,
+    TEL_CD_BKTE_PAGE_RD,
+    TEL_CD_BKTE_PAGE_BAD,
+    TEL_CD_BKTE_PAGE_FROM_IU
+} TELEMETRY_CODE_MEM;
+
+typedef enum {
+    TEL_CD_SIM_SEND = 1,
+    TEL_CD_SIM_ERR,
+    TEL_CD_SIM_RESET,
+    TEL_CD_SIM_OPEN,
+    TEL_CD_SIM_BAD_CSQ,
+    TEL_CD_SIM_LOW_CSQ,
+    TEL_CD_SIM_GOOD_CSQ,
+    TEL_CD_SIM_HIGH_CSQ,
+    TEL_CD_SIM_TIME_OPEN,
+    TEL_CD_SIM_TIME_CLOSE,
+    TEL_CD_SIM_TIME_SEND,
+    TEL_CD_SIM_TIME_ALL,
+    TEL_CD_SIM_GPS_INV_CNT,
+    TEL_CD_SIM_GPS_PARSE_ER_CNT,
+    TEL_CD_SIM_GPS_PARSE_ERROR,
+    TEL_CD_SIM_GPS_TIMESYNC,
+    TEL_CD_SIM_GPS_RESET
+} TELEMETRY_CODE_SIMCOM;
 
 typedef enum {
     CMD_REQUEST_SERVER_TIME = 0x11,

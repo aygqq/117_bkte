@@ -5,12 +5,12 @@
  *      Author: bls
  */
 
-#include "../Utils/Inc/utils_bkte.h"
+#include "utils_bkte.h"
 
-#include "../Utils/Inc/utils_crc.h"
-#include "../Utils/Inc/utils_flash.h"
-#include "../Utils/Inc/utils_pckgs_manager.h"
-#include "../Utils/Inc/utils_sd.h"
+#include "utils_crc.h"
+#include "utils_flash.h"
+#include "utils_pckgs_manager.h"
+#include "utils_sd.h"
 GPIO_TypeDef* oneWirePorts[BKTE_MAX_CNT_1WIRE] = {
     ONEWIRE_1_EN_GPIO_Port, ONEWIRE_2_EN_GPIO_Port, ONEWIRE_3_EN_GPIO_Port,
     ONEWIRE_4_EN_GPIO_Port};
@@ -42,21 +42,89 @@ void bkteInit() {
 
     for (u8 i = 0; i < 3; i++)
         bkte.idMCU[i] = getFlashData(BKTE_ADDR_ID_MCU + (i * 4));
-    D(printf("%08x%08x%08x\r\n", (uint)bkte.idMCU[0], (uint)bkte.idMCU[1],
-             (uint)bkte.idMCU[2]));
+    LOG(LEVEL_MAIN, "%08x%08x%08x\r\n", (uint)bkte.idMCU[0], (uint)bkte.idMCU[1], (uint)bkte.idMCU[2]);
+
     bkte.hwStat.regHardWareStat = 0;
     bkte.erFlags.errReg = 0;
-    bkte.idNewFirmware = 0xFD;
+    bkte.idFirmware = BKTE_ID_FIRMWARE;
+    bkte.info.idBoot = BKTE_ID_BOOT;
+    bkte.server = SERVER_NIAC;
+    u8 id[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+    memcpy(bkte.niacIdent, id, 40);
+    memset(&bkte.stat, 0, sizeof(statistics_t));
+    memset(&bkte.timers, 0, sizeof(time_stat_t));
+}
+
+u32 getUnixTimeStamp() {
+    time_t           t;
+    static struct tm curTime;
+
+    osMutexWait(mutexRTCHandle, osWaitForever);
+    HAL_RTC_GetTime(&hrtc, &tmpTime, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc, &tmpDate, RTC_FORMAT_BIN);
+    curTime.tm_year = tmpDate.Year + 100;
+    curTime.tm_mday = tmpDate.Date;
+    curTime.tm_mon = tmpDate.Month - 1;
+
+    curTime.tm_hour = tmpTime.Hours;
+    curTime.tm_min = tmpTime.Minutes;
+    curTime.tm_sec = tmpTime.Seconds;
+    osMutexRelease(mutexRTCHandle);
+    curTime.tm_isdst = 0;
+
+    t = mktime(&curTime);
+    return (u32)t;
+}
+
+void setUnixTimeStamp(u32 timeStamp) {
+    if (timeStamp < 946684800) {
+        LOG(LEVEL_ERROR, "BAD TIMESTAMP\r\n");
+        return;
+    }
+
+    RTC_TimeTypeDef sTime;
+    RTC_DateTypeDef sDate;
+
+    osMutexWait(mutexRTCHandle, osWaitForever);
+
+    struct tm time_tm;
+    time_t    now = (time_t)timeStamp;
+    time_tm = *(localtime(&now));
+
+    sTime.Hours = (uint8_t)time_tm.tm_hour;
+    sTime.Minutes = (uint8_t)time_tm.tm_min;
+    sTime.Seconds = (uint8_t)time_tm.tm_sec;
+    sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+    sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+    if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        LOG(LEVEL_ERROR, "Failed to set time\r\n");
+    }
+
+    if (time_tm.tm_wday == 0) { time_tm.tm_wday = 7; }  // the chip goes mon tue wed thu fri sat sun
+    sDate.WeekDay = (uint8_t)time_tm.tm_wday;
+    sDate.Month = (uint8_t)time_tm.tm_mon + 1;  // momth 1- This is why date math is frustrating.
+    sDate.Date = (uint8_t)time_tm.tm_mday;
+    sDate.Year = (uint16_t)(time_tm.tm_year + 1900 - 2000);  // time.h is years since 1900, chip is years since 2000
+
+    /*
+     * update the RTC
+     */
+    if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        LOG(LEVEL_ERROR, "Failed to set date\r\n");
+    }
+
+    HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR0, 0x32F2);  // lock it in with the backup registers
+    osMutexRelease(mutexRTCHandle);
 }
 
 ErrorStatus getServerTime() {
     u8 bufTime[4];
-    if (generateWebPckgReq(CMD_REQUEST_SERVER_TIME, NULL, 0, SZ_REQUEST_GET_SERVER_TIME, bufTime, 4) == ERROR) {
-        sdWriteLog(SD_ER_BAD_SERVERTIME, SD_LEN_ER_MSG, NULL, 0, &sdSectorLogs);
-        D(printf("ERROR: bad server time\r\n"));
+    if (generateWebPckgReq(CMD_REQUEST_SERVER_TIME, NULL, 0, SZ_REQUEST_GET_SERVER_TIME, bufTime, 4, (u8*)&bkte.idMCU) == ERROR) {
+        LOG_WEB(LEVEL_ERROR, "ERROR: bad server time\r\n");
         return ERROR;
     } else {
-        time_t     t = bufTime[0] << 24 | bufTime[1] << 16 | bufTime[2] << 8 | bufTime[3];
+        time_t t =
+            bufTime[0] << 24 | bufTime[1] << 16 | bufTime[2] << 8 | bufTime[3];
         struct tm* pTm;
         pTm = gmtime(&t);
         if (pTm != NULL) {
@@ -68,10 +136,14 @@ ErrorStatus getServerTime() {
             tmpDate.Month = pTm->tm_mon + 1;
             tmpDate.Year = pTm->tm_year - 100;
 
-            if (tmpDate.Year < 30 && tmpDate.Year > 19) {  // sometimes timestamp is wrong and has value like 2066 year
+            osMutexWait(mutexRTCHandle, osWaitForever);
+            if (tmpDate.Year < 30 &&
+                tmpDate.Year > 19) {  // sometimes timestamp is wrong and has
+                                      // value like 2066 year
                 HAL_RTC_SetTime(&hrtc, &tmpTime, RTC_FORMAT_BIN);
                 HAL_RTC_SetDate(&hrtc, &tmpDate, RTC_FORMAT_BIN);
             }
+            osMutexRelease(mutexRTCHandle);
         }
     }
     return SUCCESS;
@@ -79,17 +151,15 @@ ErrorStatus getServerTime() {
 
 void getNumFirmware() {
     u8 bufFirmware[4];
-    if (generateWebPckgReq(CMD_REQUEST_NUM_FIRMWARE, NULL, 0, SZ_REQUEST_GET_NUM_FIRMWARE, bufFirmware, 4) == ERROR) {
-        sdWriteLog(SD_ER_NUM_FIRMWARE, SD_LEN_ER_MSG, NULL, 0, &sdSectorLogs);
-        D(printf("ERROR: getNumFirmware()\r\n"));
+    if (generateWebPckgReq(CMD_REQUEST_NUM_FIRMWARE, NULL, 0, SZ_REQUEST_GET_NUM_FIRMWARE, bufFirmware, 4, (u8*)&bkte.idMCU) == ERROR) {
+        LOG_WEB(LEVEL_ERROR, "ERROR: getBKTENumFw()\r\n");
     } else {
         u32 numFirmware = bufFirmware[0] << 24 | bufFirmware[1] << 16 | bufFirmware[2] << 8 | bufFirmware[3];
-        if (numFirmware != BKTE_ID_FIRMWARE && numFirmware > 0) {
-            D(printf("New FIRMWARE v.:%d\r\n", (int)numFirmware));
-            bkte.idNewFirmware = numFirmware;
+        LOG_WEB(LEVEL_INFO, "BKTE FIRMWARE v.:%d\r\n", (int)numFirmware);
+        if (numFirmware != BKTE_ID_FIRMWARE && numFirmware > 0 && numFirmware < 10) {
+            LOG_WEB(LEVEL_MAIN, "New FIRMWARE v.:%d\r\n", (int)numFirmware);
+            bkte.idNewFirmware = (u8)numFirmware;
             vTaskResume(getNewBinHandle);
-        } else {
-            D(printf("Old FIRMWARE v.:%d\r\n", (int)numFirmware));
         }
     }
 }
@@ -124,32 +194,11 @@ void fillPckgTemp(PckgTemp* pckg, s8* data) {
     memcpy(pckg->temp, data, 4);
 }
 
-u32 getUnixTimeStamp() {
-    time_t           t;
-    static struct tm curTime;
-
-    osMutexWait(mutexRTCHandle, osWaitForever);
-    HAL_RTC_GetTime(&hrtc, &tmpTime, RTC_FORMAT_BIN);
-    HAL_RTC_GetDate(&hrtc, &tmpDate, RTC_FORMAT_BIN);
-    curTime.tm_year = tmpDate.Year + 100;
-    curTime.tm_mday = tmpDate.Date;
-    curTime.tm_mon = tmpDate.Month - 1;
-
-    curTime.tm_hour = tmpTime.Hours;
-    curTime.tm_min = tmpTime.Minutes;
-    curTime.tm_sec = tmpTime.Seconds;
-    osMutexRelease(mutexRTCHandle);
-    curTime.tm_isdst = 0;
-
-    t = mktime(&curTime);
-    return (u32)t;
-}
-
 u8 isCrcOk(char* pData, int len) {
     u32 crcCalc = crc32_byte(pData, len);
     u32 crcRecv = pData[len] << 24 | pData[len + 1] << 16 | pData[len + 2] << 8 | pData[len + 3];
     if (crcCalc != crcRecv) {
-        D(printf("ERROR: crc \r\n"));
+        LOG(LEVEL_ERROR, "isCrcOk bad crc \r\n");
     }
     for (u8 i = 0; i < sizeof(u32); i++) {
         pData[len + i] = 0xFF;  //! clear crc32
@@ -199,40 +248,39 @@ void toggleRedLeds(){
 void updSpiFlash(CircularBuffer* cbuf) {
     u16 bufEnd[2] = {0, BKTE_PREAMBLE};
 
+    osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
+
     bufEnd[0] = calcCrc16(cbuf->buf, cbuf->readAvailable);
     cBufWriteToBuf(cbuf, (u8*)bufEnd, 4);
-
     spiFlashWriteNextPg(cbuf->buf, cbuf->readAvailable, 0);
     cBufReset(cbuf);
 
-    D(printf("updSpiFlash()\r\n"));
+    osMutexRelease(mutexWriteToEnergyBufHandle);
+
+    LOG_FLASH(LEVEL_INFO, "updSpiFlash()\r\n");
 }
 
 u8 waitGoodCsq(u32 timeout) {
     u8  csq = 0;
     u16 cntNOCsq = 0;
     u16 cntNOCsqMax = timeout / 3;
-    bkte.erFlags.simCSQINF = 0;
 
     while ((csq = simCheckCSQ()) < 5 || csq > 99) {
         osDelay(3000);
-        // saveCsq(csq);
         cntNOCsq++;
-        if (cntNOCsq >= cntNOCsqMax) {
-            bkte.erFlags.simCSQINF = 1;
-            sdWriteLog(SD_ER_CSQINF, SD_LEN_ER_MSG, NULL, 0, &sdSectorLogError);
+        if (cntNOCsq == cntNOCsqMax) {
             cntNOCsq = 0;
             return 0;
         }
-        D(printf("ER: CSQ %d\r\n", csq));
+        LOG_SIM(LEVEL_DEBUG, "ER: CSQ %d\r\n", csq);
     }
-    bkte.erFlags.simCSQINF = 0;
-    // D(printf("OK: CSQ %d\r\n", csq));
+    LOG_SIM(LEVEL_DEBUG, "OK: CSQ %d\r\n", csq);
     return 1;
 }
 
 void saveData(u8* data, u8 sz, u8 cmdData, CircularBuffer* cbuf) {
     u16 bufEnd[2] = {0, BKTE_PREAMBLE};
+
     osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
 
     if (cbuf->writeAvailable < sz + 2 + 4) {
@@ -251,8 +299,7 @@ void saveData(u8* data, u8 sz, u8 cmdData, CircularBuffer* cbuf) {
 u8 isDataFromFlashOk(char* pData, u8 len) {
     u16 crc;
     for (u8 i = len - 1; i; --i) {
-        if (pData[i] == BKTE_PREAMBLE_LSB &&
-            pData[i - 1] == BKTE_PREAMBLE_MSB) {
+        if (pData[i] == BKTE_PREAMBLE_LSB && pData[i - 1] == BKTE_PREAMBLE_MSB) {
             crc = pData[i - 3] | pData[i - 2] << 8;
             if (calcCrc16(pData, i - 3) == crc) {
                 len = (i + 1) - 4;

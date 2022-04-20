@@ -12,6 +12,7 @@ extern osMutexId     mutexWriteToEnergyBufHandle;
 extern osMutexId     mutexWebHandle;
 extern osMessageQId  queueWebPckgHandle;
 extern osSemaphoreId semCreateWebPckgHandle;
+extern osSemaphoreId semSendWebPckgHandle;
 
 extern CircularBuffer circBufPckgEnergy;
 extern u8             SZ_PCKGENERGY;
@@ -21,7 +22,7 @@ static Page     pgEnergy = {.type = CMD_DATA_ENERGY, .szType = SZ_CMD_ENERGY};
 static Page     pgTemp = {.type = CMD_DATA_TEMP, .szType = SZ_CMD_TEMP};
 static Page     pgVoltAmper = {.type = CMD_DATA_VOLTAMPER, .szType = SZ_CMD_VOLTAMPER};
 static Page     pgTelemetry = {.type = CMD_DATA_TELEMETRY, .szType = SZ_CMD_TELEMETRY};
-static Page *   allPages[] = {&pgVoltAmper, &pgEnergy, &pgTemp, &pgTelemetry};
+static Page    *allPages[] = {&pgVoltAmper, &pgEnergy, &pgTemp, &pgTelemetry};
 static WebPckg *curPckg;
 
 void taskCreateWebPckg(void const *argument) {
@@ -30,21 +31,36 @@ void taskCreateWebPckg(void const *argument) {
     u16 delayPages;
     u16 szAllPages = 0;
     u8  amntPages;
-    u8  len;
+    u8  len, flush = 0;
+
     osSemaphoreWait(semCreateWebPckgHandle, 1);
 
-    // osSemaphoreWait(semCreateWebPckgHandle, osWaitForever);
-
-    offAllLeds();
     vTaskSuspend(createWebPckgHandle);
 
+    LOG_WEB(LEVEL_MAIN, "taskCreateWebPckg\r\n");
     for (;;) {
-        bkte.stat.cr_web++;
         iwdgTaskReg |= IWDG_TASK_REG_WEB_PCKG;
+        flush = 0;
         delayPages = getDelayPages();
-        while (delayPages >= BKTE_THRESHOLD_CNT_PAGES || (osSemaphoreWait(semCreateWebPckgHandle, 1) == osOK)) {
+        if (osSemaphoreWait(semCreateWebPckgHandle, 2000) == osOK) {
+            // generateTestPackage();
+            // delayPages = getDelayPages();
+            flush = 1;
+            LOG_WEB(LEVEL_INFO, "FLUSH, pages: %d\r\n", delayPages);
+            // if (circBufAllPckgs.readAvailable > 0) {
+            //     flush = 1;
+            //     // updSpiFlash(&circBufAllPckgs);
+            //     LOG_WEB(LEVEL_INFO, "FLUSH STARTED\r\n");
+            // }
+        }
+        while (flush == 1 || delayPages > 3) {
+            if (delayPages == 0) {
+                flush = 0;
+                break;
+            }
             curPckg = getFreePckg();
             if (curPckg == NULL) {
+                flush = 2;
                 break;
             }
             clearAllPages();
@@ -57,7 +73,6 @@ void taskCreateWebPckg(void const *argument) {
             } else {
                 amntPages = delayPages > 3 ? 3 : delayPages;
             }
-            // amntPages = delayPages > AMOUNT_MAX_PAGES ? AMOUNT_MAX_PAGES : delayPages;
             for (u8 i = 0; i < amntPages; i++) {
                 len = spiFlashReadLastPg((u8 *)tmpBufPage, 256, 0);
                 if (len) {
@@ -66,26 +81,37 @@ void taskCreateWebPckg(void const *argument) {
             }
             szAllPages = getSzAllPages();
             if (szAllPages) {
-                D(printf("Create package\r\n"));
-                initWebPckg(curPckg, szAllPages, 0);
+                // LOG_WEB(LEVEL_INFO, "Create package\r\n");
+                initWebPckg(curPckg, szAllPages, 0, (u8 *)&bkte.idMCU, bkte.server);
                 addPagesToWebPckg(curPckg);
-                osMessagePut(queueWebPckgHandle, (u32)curPckg, 60000);
+                if (osMessagePut(queueWebPckgHandle, (u32)curPckg, 180000) != osOK) {
+                    bkte.stat.queueErrCount++;
+                    flush = 2;
+                }
+                if (flush == 1) flush = 2;
             } else {
                 freeWebPckg(curPckg);
+                flush = 0;
             }
             delayPages = getDelayPages();
         }
 
+        if (flush == 2) {
+            flush = 0;
+            // LOG_WEB(LEVEL_INFO, "FLUSH CONTINUED 1\r\n");
+            osSemaphoreRelease(semSendWebPckgHandle);
+        }
+
         if (!delayPages) {
-            // D(printf("no pckg in spiflash\r\n"));
+            LOG_WEB(LEVEL_DEBUG, "no pckg in spiflash\r\n");
             bkte.isSentData = 1;
         }
-        osDelay(1000);
+        // osDelay(1000);
     }
 }
 
 void clearAllPages() {
-    for (u8 i = 0; i < 4; i++) {
+    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
         clearPage(allPages[i]);
     }
 }
@@ -111,7 +137,7 @@ void parseData(u8 *tmpBufPage, u8 len) {
                 i += (SZ_CMD_TELEMETRY + 1);
                 break;
             default:
-                D(printf("ER: CMD_DATA_X is wrong\r\n"));
+                LOG_WEB(LEVEL_ERROR, "ER: CMD_DATA_X is wrong\r\n");
                 return;
                 break;
         }
@@ -127,7 +153,7 @@ void clearPage(Page *pg) {
 
 u16 getSzAllPages() {
     u16 sz = 0;
-    for (u8 i = 0; i < 4; i++) {
+    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
         if (allPages[i]->iter) {
             sz += (allPages[i]->iter + 1 + 1);  // sz + sizeof(type) + szeof(cnt)
         }
@@ -141,11 +167,11 @@ void addToPage(Page *pg, u8 *src, u8 sz) {
 }
 
 void addPagesToWebPckg(WebPckg *pckg) {
-    for (u8 i = 0; i < 4; i++) {
+    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
         if (allPages[i]->iter) {
             addInfoToWebPckg(pckg, allPages[i]->buf, allPages[i]->iter, allPages[i]->iter / allPages[i]->szType, allPages[i]->type);
         }
     }
-    closeWebPckg(pckg);
-    showWebPckg(pckg);
+    closeWebPckg(pckg, bkte.server);
+    // showWebPckg(pckg);
 }

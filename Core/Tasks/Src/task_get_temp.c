@@ -30,24 +30,24 @@ void taskGetTemp(void const *argument) {
 
         if (readTemp() == 0) {
             osDelay(1000);
-            D(printf("ERROR: temperature read\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "temperature read\r\n");
             continue;
         }
         tmpTime = HAL_GetTick() - testTimestamp;
         if (tmpTime > 6000) {
-            D(printf("ERROR: too long time\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "too long time\r\n");
         }
         osDelay(52);
         fillPckgTemp(&pckgTemp, temps);
         if (isTemperatureFresh(&pckgTemp) || !numIteration) {
             saveData((u8 *)&pckgTemp, SZ_CMD_TEMP, CMD_DATA_TEMP, &circBufAllPckgs);
-            D(printf("OK: TEMP |%d %d %d %d| %d\r\n", temps[0], temps[1], temps[2], temps[3], tmpTime));
+            LOG_TEMP(LEVEL_INFO, "TEMP |%d %d %d %d| %d\r\n", temps[0], temps[1], temps[2], temps[3], tmpTime);
         }
         numIteration = (numIteration + 1) % BKTE_MEASURE_FULL_LOOP;
 
         osDelay(800);
         // tmpTime = HAL_GetTick() - testTimestamp;
-        // D(printf("OK: TEMP |%d %d %d %d| %d\r\n", temps[0], temps[1], temps[2], temps[3], tmpTime));
+        // LOG_TEMP(LEVEL_INFO, "TEMP |%d %d %d %d| %d\r\n", temps[0], temps[1], temps[2], temps[3], tmpTime);
     }
 }
 
@@ -67,40 +67,40 @@ u8 readTemp() {
         setTempLine(num1Wire);
         // osDelay(500);
         if (ds2482OneWireReset() != DS2482_OK) {
-            D(printf("ERROR: ds2482OneWireReset()\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482OneWireReset()\r\n");
             saveErrorToTel();
             return 0;
         }
         osDelay(10);
         if (ds2482WriteByte(0xCC) != DS2482_OK) {  // Skip ROM command
-            D(printf("ERROR: ds2482WriteByte(0xCC)\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482WriteByte(0xCC)\r\n");
             saveErrorToTel();
             return 0;
         }
         osDelay(10);
         // Test reading the temperature from the DS18S20
         //	  ds2482WriteConfig(false, true, true);  // Enable strong pullup
-        //for temp conversion
+        // for temp conversion
         if (ds2482WriteByte(0x44) != DS2482_OK) {  // Get the temp
-            D(printf("ERROR: ds2482WriteByte(0x44)\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482WriteByte(0x44)\r\n");
             saveErrorToTel();
             return 0;
         }
         osDelay(100);  // Wait for the temp conversion
         if (ds2482OneWireReset() != DS2482_OK) {
-            D(printf("ERROR: ds2482OneWireReset()\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482OneWireReset()\r\n");
             saveErrorToTel();
             return 0;
         }
         osDelay(10);
         if (ds2482WriteByte(0xCC) != DS2482_OK) {  // Skip ROM command
-            D(printf("ERROR: ds2482WriteByte(0xCC)\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482WriteByte(0xCC)\r\n");
             saveErrorToTel();
             return 0;
         }
         osDelay(10);
         if (ds2482WriteByte(0xbe) != DS2482_OK) {  // Read scratchpad command
-            D(printf("ERROR: ds2482WriteByte(0xbe)\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482WriteByte(0xbe)\r\n");
             saveErrorToTel();
             return 0;
         }
@@ -108,12 +108,12 @@ u8 readTemp() {
         memset(tempBytes, '\0', 2);
 
         if (ds2482ReadByte(&tempBytes[0]) != DS2482_OK) {  // LSB temp byte
-            D(printf("ERROR: ds2482ReadByte(&tempBytes[0])\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482ReadByte(&tempBytes[0])\r\n");
             saveErrorToTel();
             return 0;
         }
         if (ds2482ReadByte(&tempBytes[1]) != DS2482_OK) {  // MSB temp byte
-            D(printf("ERROR: ds2482ReadByte(&tempBytes[1])\r\n"));
+            LOG_TEMP(LEVEL_ERROR, "ds2482ReadByte(&tempBytes[1])\r\n");
             saveErrorToTel();
             return 0;
         }
@@ -123,7 +123,7 @@ u8 readTemp() {
             tmpTemp = BKTE_NO_TEMP;
         }
         temps[num1Wire] = tmpTemp;
-        // D(printf("TEMP %d:%d\r\n", num1Wire, tmpTemp));
+        // LOG_TEMP(LEVEL_INFO, "TEMP %d:%d\r\n", num1Wire, tmpTemp);
         // HAL_GPIO_TogglePin(LED3G_GPIO_Port, LED3G_Pin);
         resetTempLine(num1Wire);
 

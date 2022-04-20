@@ -50,19 +50,19 @@ void taskGetEnergy(void const *argument) {
         if (retLen == BKTE_SZ_UART_MSG) {
             numIteration = (numIteration + 1) % BKTE_MEASURE_FULL_LOOP;
             fillPckgVoltAmper(&pckgVoltAmper, testBufUart1);
-            // D(printf("Energy: volt %d, amper %d (prev: %d %d)\r\n", pckgVoltAmper.volt, pckgVoltAmper.amper, bkte.lastData.volt, bkte.lastData.current));
+            // LOG_PARAM(LEVEL_INFO, "Energy: volt %d, amper %d (prev: %d %d)\r\n", pckgVoltAmper.volt, pckgVoltAmper.amper, bkte.lastData.volt, bkte.lastData.current));
             if (isVoltAmperFresh(&pckgVoltAmper) || !numIteration) {
                 saveData((u8 *)&pckgVoltAmper, SZ_CMD_VOLTAMPER, CMD_DATA_VOLTAMPER, &circBufAllPckgs);
-                // D(printf("Energy: volt %d, amper %d\r\n", pckgVoltAmper.volt, pckgVoltAmper.amper));
+                // LOG_PARAM(LEVEL_INFO, "Energy: volt %d, amper %d\r\n", pckgVoltAmper.volt, pckgVoltAmper.amper));
             }
 
             fillPckgEnergy(&pckgEnergy, testBufUart1);
-            // D(printf("Energy: act %d, react %d (prev: %d %d)\r\n", pckgEnergy.enAct, pckgEnergy.enReact, bkte.lastData.enAct, bkte.lastData.enReact));
+            // LOG_PARAM(LEVEL_INFO, "Energy: act %d, react %d (prev: %d %d)\r\n", pckgEnergy.enAct, pckgEnergy.enReact, bkte.lastData.enAct, bkte.lastData.enReact));
             if (isEnergyFresh(&pckgEnergy) || !numIteration) {
                 saveData((u8 *)&pckgEnergy, SZ_CMD_ENERGY, CMD_DATA_ENERGY, &circBufAllPckgs);
-                // D(printf("Energy: act %d, react %d (prev: %d %d)\r\n", pckgEnergy.enAct, pckgEnergy.enReact, bkte.lastData.enAct, bkte.lastData.enReact));
+                // LOG_PARAM(LEVEL_INFO, "Energy: act %d, react %d (prev: %d %d)\r\n", pckgEnergy.enAct, pckgEnergy.enReact, bkte.lastData.enAct, bkte.lastData.enReact));
             }
-            // D(printf("OK: enAct: %08x, enReact: %08x", pckgEnergy.enAct, pckgEnergy.enReact));
+            // LOG_PARAM(LEVEL_INFO, "OK: enAct: %08x, enReact: %08x", pckgEnergy.enAct, pckgEnergy.enReact));
         }
         osDelay(400);
         iwdgTaskReg |= IWDG_TASK_REG_ENERGY;
@@ -110,11 +110,10 @@ u8 isEnergyFresh(PckgEnergy *pckg) {
 }
 
 void unLockTasks() {
-    D(printf("unLockTasks\r\n"));
+    LOG(LEVEL_MAIN, "unLockTasks\r\n");
     // vTaskResume(getNewBinHandle); //! debug download firmware
     vTaskResume(webExchangeHandle);
     vTaskResume(getTempHandle);
-    // vTaskResume(loraHandle);
     vTaskResume(createWebPckgHandle);
     vTaskResume(wirelessSensHandle);
     vTaskResume(keepAliveHandle);

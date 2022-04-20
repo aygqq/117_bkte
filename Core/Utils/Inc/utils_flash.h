@@ -7,8 +7,8 @@
 
 #ifndef INC_UTILS_FLASH_H_
 #define INC_UTILS_FLASH_H_
-#include "../Utils/Inc/utils_bkte.h"
 #include "main.h"
+#include "utils_bkte.h"
 
 #define FLASH_ADDR_ID_BOOT          0x0800C000
 #define FLASH_ADDR_IS_NEW_FIRMWARE  0x0800C004

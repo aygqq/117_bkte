@@ -52,8 +52,8 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#include "../Drivers/Inc/simcom.h"
 #include "../Tasks/Inc/task_wireless_sens.h"
+#include "simcom.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -334,15 +334,14 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-    u16 cnt;
-    u16 lenData, lenAllPckg;
+
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
     if ((__HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE) != RESET) &&
         (__HAL_UART_GET_IT_SOURCE(&huart2, UART_IT_IDLE) != RESET)) {
         uInfoWirelessSens.irqFlags.isIrqIdle = 1;
-        
+
         __HAL_UART_CLEAR_IDLEFLAG(&huart2);
     }
   /* USER CODE END USART2_IRQn 1 */

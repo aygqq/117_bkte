@@ -5,358 +5,268 @@
     <configuration>
         <name>bkte_2_0_iar1</name>
         <outputs>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\circularBuffer.c</file>
-            <file>$PROJ_DIR$\..\FATFS\App\fatfs.c</file>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_bkte.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_lora.c</file>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_pckgs_manager.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_it.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\rtc.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\usart.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_web_excahnge.c</file>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_sd.c</file>
             <file>$PROJ_DIR$\..\Core\Tasks\Src\task_create_webpckg.c</file>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_crc.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\main.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\system_stm32f4xx.c</file>
-            <file>$PROJ_DIR$\..\FATFS\Target\sd_diskio.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\sdio.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_msp.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_timebase_tim.c</file>
-            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_flash.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_energy.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\spi.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\tim.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_keep_alive.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_iwdg.c</file>
-            <file>$PROJ_DIR$\..\FATFS\Target\bsp_driver_sd.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_new_bin.c</file>
-            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_temp.c</file>
-            <file>$PROJ_DIR$\..\FATFS\Target\fatfs_platform.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\dma.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\freertos.c</file>
-            <file>$PROJ_DIR$\startup_stm32f407xx.s</file>
-            <file>$PROJ_DIR$\..\Core\Src\gpio.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\i2c.c</file>
-            <file>$PROJ_DIR$\..\Core\Drivers\Src\ds2482.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\iwdg.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\adc.c</file>
-            <file>$PROJ_DIR$\..\Core\Src\crc.c</file>
-            <file>$PROJ_DIR$\..\Core\Drivers\Src\sx1272.c</file>
-            <file>$PROJ_DIR$\..\Core\Drivers\Src\simcom.c</file>
             <file>$PROJ_DIR$\..\Core\Drivers\Src\spiflash.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sd.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_gpio.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_exti.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_utils.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_rcc.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_crc.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\diskio.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</file>
-            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\croutine.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\dma.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_it.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\usart.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\main.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\iwdg.c</file>
+            <file>$PROJ_DIR$\..\FATFS\App\fatfs.c</file>
+            <file>$PROJ_DIR$\..\FATFS\Target\bsp_driver_sd.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\i2c.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\crc.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\sdio.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\gpio.c</file>
+            <file>$PROJ_DIR$\startup_stm32f407xx.s</file>
+            <file>$PROJ_DIR$\..\Core\Drivers\Src\ds2482.c</file>
+            <file>$PROJ_DIR$\..\Core\Drivers\Src\sx1272.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\spi.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_msp.c</file>
+            <file>$PROJ_DIR$\..\Core\Drivers\Src\simcom.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\adc.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\rtc.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_timebase_tim.c</file>
+            <file>$PROJ_DIR$\..\FATFS\Target\fatfs_platform.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\freertos.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\tim.c</file>
+            <file>$PROJ_DIR$\..\FATFS\Target\sd_diskio.c</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\iwdg.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spi.o</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\port.c</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_crc.__cstat.et</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\queue.c</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_pckgs_manager.__cstat.et</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_utils.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\diskio.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\port.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\portasm.s</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_rcc.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\croutine.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\queue.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_gpio.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sd.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\stream_buffer.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_exti.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</file>
+            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\timers.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_bkte.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_new_bin.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_crc.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_pckgs_manager.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\circularBuffer.c</file>
+            <file>$PROJ_DIR$\..\Core\Src\system_stm32f4xx.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_energy.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_get_temp.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_sd.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_crc.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_keep_alive.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c</file>
+            <file>$PROJ_DIR$\..\Core\Utils\Src\utils_flash.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_lora.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_iwdg.c</file>
+            <file>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c</file>
+            <file>$PROJ_DIR$\..\Core\Tasks\Src\task_web_excahnge.c</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_exti.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff_gen_drv.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ramfunc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spiflash.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spiflash.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_bkte.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\rtc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\gpio.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_rcc.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spiflash.__cstat.et</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tasks.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spiflash.o</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_bkte.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\syscall.o</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\timers.c</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\usart.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\freertos.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_create_webpckg.__cstat.et</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\portasm.s</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\stream_buffer.c</file>
-            <file>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\list.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\rtc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\i2c.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\simcom.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\gpio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c_ex.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_it.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff_gen_drv.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_exti.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ramfunc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc_ex.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_crc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\freertos.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_create_webpckg.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_crc.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_exti.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_iwdg.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\system_stm32f4xx.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\port.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_lora.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_sd.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_energy.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_rcc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\croutine.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_web_excahnge.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_new_bin.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\usart.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\syscall.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\simcom.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\list.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tasks.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\i2c.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_it.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\list.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\diskio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_sd.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_sdmmc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_msp.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sd_diskio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_gpio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_timebase_tim.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_timebase_tim.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\rtc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_temp.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\crc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs_platform.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_crc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\circularBuffer.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stream_buffer.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_iwdg.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\croutine.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_timebase_tim.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_crc.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sdio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\heap_4.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_utils.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\adc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_crc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_energy.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\adc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_bkte.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\bsp_driver_sd.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\diskio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_sdmmc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sdio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_gpio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_create_webpckg.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\cmsis_os.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_sd.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_energy.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_new_bin.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_msp.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sd_diskio.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\crc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_lora.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_temp.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_sdmmc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_gpio.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_rcc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\croutine.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_timebase_tim.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\circularBuffer.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\system_stm32f4xx.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\port.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\diskio.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_web_excahnge.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_sd.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\rtc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs_platform.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\system_stm32f4xx.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Exe\bkte_2_0_iar1.out</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_spi.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_sd.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_keep_alive.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tasks.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_web_excahnge.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\simcom.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ds2482.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\main.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\cmsis_os.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_keep_alive.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ds2482.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\main.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\gpio.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\usart.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Exe\bkte_2_0_iar1.bin</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tim.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\freertos.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\port.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sx1272.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_utils.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ramfunc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_cortex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_gpio.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_flash.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\portasm.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tim.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\startup_stm32f407xx.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_gpio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\crc.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\dma.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_it.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_new_bin.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_temp.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_utils.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\cmsis_os.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_gpio.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_flash.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\crc.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sx1272.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stream_buffer.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ds2482.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\cmsis_os.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_keep_alive.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sx1272.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tim.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\main.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_gpio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_flash.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\gpio.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_spi.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\simcom.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_sd.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_utils.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\freertos.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_keep_alive.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\portasm.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_cortex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\port.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tasks.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ramfunc.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\main.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\tim.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ds2482.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\system_stm32f4xx.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\usart.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Exe\bkte_2_0_iar1.bin</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Exe\bkte_2_0_iar1.out</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_web_excahnge.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_sd.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_cortex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_exti.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\circularBuffer.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\timers.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\i2c.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\event_groups.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_uart.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\syscall.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\iwdg.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\queue.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\event_groups.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_pckgs_manager.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff_gen_drv.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_msp.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr_ex.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\heap_4.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc_ex.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\timers.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\bsp_driver_sd.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_exti.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\dma.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\queue.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sd_diskio.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_lora.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\adc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_get_energy.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sdio.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\bsp_driver_sd.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_sdmmc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sdio.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_gpio.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_crc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_bkte.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\heap_4.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\adc.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\diskio.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_create_webpckg.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_uart.o</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spi.__cstat.et</file>
-            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs_platform.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\task_lora.__cstat.et</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_spi.o</file>
             <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\fatfs_platform.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\sd_diskio.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\queue.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\spi.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_sd.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\timers.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\iwdg.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_cortex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_uart.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\circularBuffer.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rcc_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\event_groups.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\event_groups.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\ff_gen_drv.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\heap_4.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\bsp_driver_sd.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_msp.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\timers.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_pwr_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_tim.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\syscall.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\utils_pckgs_manager.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\i2c.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_exti.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_rtc_ex.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_dma_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_adc_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\queue.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_flash.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_ll_exti.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c_ex.__cstat.et</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\dma.o</file>
+            <file>$PROJ_DIR$\bkte_2_0_iar1\Obj\stm32f4xx_hal_i2c.__cstat.et</file>
         </outputs>
         <file>
             <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 212</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\circularBuffer.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 218</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\FATFS\App\fatfs.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 254</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_bkte.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 90</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_lora.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 248</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_pckgs_manager.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 81</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_it.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 110</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\rtc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 140</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\usart.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 94</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_web_excahnge.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 214</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_sd.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 133</file>
+                    <file> 153</file>
                 </tool>
             </outputs>
         </file>
@@ -365,295 +275,7 @@
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 96</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_crc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 79</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\main.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 188</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\system_stm32f4xx.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 121</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\FATFS\Target\sd_diskio.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 247</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\sdio.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 167</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_msp.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 234</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 177</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 155</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_timebase_tim.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 138</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_flash.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 190</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 239</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_energy.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 159</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\spi.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 251</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\tim.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 206</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 200</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_keep_alive.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 198</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_iwdg.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 120</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\FATFS\Target\bsp_driver_sd.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 242</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_new_bin.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 178</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_temp.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 179</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\FATFS\Target\fatfs_platform.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 144</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\dma.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 175</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\freertos.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 197</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\startup_stm32f407xx.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 172</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 106</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\i2c.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 221</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Drivers\Src\ds2482.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 207</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\iwdg.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 228</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\adc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 157</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Src\crc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 143</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Drivers\Src\sx1272.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 186</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Core\Drivers\Src\simcom.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 105</file>
+                    <file> 108</file>
                 </tool>
             </outputs>
         </file>
@@ -662,147 +284,30 @@
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 85</file>
+                    <file> 95</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\dma.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 117</file>
+                    <file> 185</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_it.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 225</file>
+                    <file> 120</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 217</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 109</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 208</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sd.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 195</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_gpio.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 168</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_exti.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 243</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 115</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_utils.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 154</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 219</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 224</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_rcc.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 126</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 111</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 227</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\usart.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -811,70 +316,16 @@
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_crc.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\main.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 116</file>
+                    <file> 167</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 230</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 189</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 244</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 84</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 163</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 118</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\iwdg.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -883,7 +334,70 @@
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</name>
+            <name>$PROJ_DIR$\..\FATFS\App\fatfs.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 219</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\FATFS\Target\bsp_driver_sd.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 236</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\i2c.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 244</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\crc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 134</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\sdio.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 205</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 101</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\startup_stm32f407xx.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 184</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Drivers\Src\ds2482.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -892,34 +406,16 @@
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\diskio.c</name>
+            <name>$PROJ_DIR$\..\Core\Drivers\Src\sx1272.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 165</file>
+                    <file> 174</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 193</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</name>
-            <outputs>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 237</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\spi.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -928,25 +424,34 @@
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_msp.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 171</file>
+                    <file> 237</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff.c</name>
+            <name>$PROJ_DIR$\..\Core\Drivers\Src\simcom.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 249</file>
+                    <file> 115</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\croutine.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\adc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 197</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\rtc.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -955,79 +460,88 @@
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\port.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\stm32f4xx_hal_timebase_tim.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 201</file>
+                    <file> 143</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\queue.c</name>
+            <name>$PROJ_DIR$\..\FATFS\Target\fatfs_platform.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 246</file>
+                    <file> 151</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\freertos.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 202</file>
+                    <file> 172</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</name>
+            <name>$PROJ_DIR$\..\Core\Src\tim.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 131</file>
+                    <file> 182</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\timers.c</name>
+            <name>$PROJ_DIR$\..\FATFS\Target\sd_diskio.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 220</file>
+                    <file> 221</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</name>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc_ex.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 238</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\portasm.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
                     <file> 199</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\stream_buffer.c</name>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
-                    <file> 148</file>
+                    <file> 204</file>
                 </tool>
             </outputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</name>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 154</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 91</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c</name>
             <outputs>
                 <tool>
                     <name>__cstat</name>
@@ -1036,11 +550,497 @@
             </outputs>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_utils.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 190</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 233</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\diskio.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 211</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 235</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\ff.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 215</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\list.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 121</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 229</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\port.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 173</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM4F\portasm.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 180</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_rcc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 141</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\croutine.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 124</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\queue.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 222</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 206</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sd.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 155</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\stream_buffer.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 122</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\tasks.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 158</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 109</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 191</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_exti.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 251</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 242</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Middlewares\Third_Party\FreeRTOS\Source\timers.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 225</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rtc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 105</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 241</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 254</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_i2c_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 252</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_bkte.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 98</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 96</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 103</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 183</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_new_bin.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 188</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 187</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_crc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 28</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_pckgs_manager.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 29</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\circularBuffer.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 230</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Src\system_stm32f4xx.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 145</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 212</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_energy.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 198</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 248</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_temp.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 189</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_sd.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 149</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_crc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 110</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 247</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_keep_alive.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 156</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 228</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 104</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_exti.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 245</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Utils\Src\utils_flash.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 179</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_lora.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 217</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 177</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 92</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 240</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_iwdg.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 112</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 178</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Core\Tasks\Src\task_web_excahnge.c</name>
+            <outputs>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 159</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
             <name>$PROJ_DIR$\bkte_2_0_iar1\Exe\bkte_2_0_iar1.out</name>
             <outputs>
                 <tool>
                     <name>OBJCOPY</name>
-                    <file> 211</file>
+                    <file> 170</file>
                 </tool>
             </outputs>
         </file>

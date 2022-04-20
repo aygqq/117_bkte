@@ -1,4 +1,4 @@
-#include "../Utils/Inc/utils_crc.h"
+#include "utils_crc.h"
 static u16 Crc16Table[256] = {
     0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
     0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
@@ -131,13 +131,3 @@ uint16_t crc16WirelesSens(uint8_t *pcBlock, uint16_t len) {
     }
     return crc;
 }
-
-// u8 crc8(char* pcBlock, int len) {
-//     u8 crc = 0xFF;
-//     while (len--) {
-//         crc ^= *pcBlock++;
-//         for (u8 i = 0; i < 8; i++)
-//             crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
-//     }
-//     return crc;
-// }

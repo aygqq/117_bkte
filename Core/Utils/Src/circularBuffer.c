@@ -5,17 +5,17 @@
  *      Author: annsi
  */
 
-#include "../Utils/Inc/circularBuffer.h"
+#include "circularBuffer.h"
 
 void cBufInit(CircularBuffer* cbuf, u8* buf, u16 szBuf, CircTypeBuf type) {
     cbuf->buf = buf;
     cbuf->max = szBuf;
     cbuf->type = type;
     cBufReset(cbuf);
-    D(printf("cBufInit()\r\n"));
+    LOG_CBUF(LEVEL_MAIN, "cBufInit()\r\n");
 }
 
-void cBufReset(CBufHandle cbuf) {
+void cBufReset(CircularBuffer* cbuf) {
     cbuf->head = 0;
     cbuf->tail = 0;
     cbuf->writeAvailable = cbuf->max;
@@ -40,7 +40,7 @@ void cBufWriteToBuf(CBufHandle cbuf, u8* data, u8 sz) {
         cbuf->writeAvailable -= sz;
         cbuf->readAvailable += sz;
     } else {
-        D(printf("FULL CIRC BUFFER\r\n"));
+        LOG_CBUF(LEVEL_INFO, "FULL CIRC BUFFER\r\n");
     }
 }
 
@@ -64,15 +64,14 @@ u16 cBufRead(CBufHandle cbuf, u8* dist, u8 sz) {
                 copyGetDatafromBuf(cbuf, dist, lenMsg, CIRC_TYPE_ENERGY_UART);
             } else if (lenMsg) {
                 cBufReset(cbuf);
-                D(printf("ERROR: CIRC_TYPE_ENERGY_UART lenMsg: %d\r\n",
-                         lenMsg));
+                LOG_CBUF(LEVEL_ERROR, "CIRC_TYPE_ENERGY_UART lenMsg: %d\r\n", lenMsg);
             }
             break;
         case CIRC_TYPE_WIRELESS:
             if ((lenMsg = getLenMsgWirelessSens(cbuf))) {
                 copyGetDatafromBuf(cbuf, dist, lenMsg, CIRC_TYPE_WIRELESS);
             } else {
-                // D(printf("ERROR: CIRC_TYPE_WIRELESS\r\n"));
+                // LOG_CBUF(LEVEL_ERROR, "CIRC_TYPE_WIRELESS\r\n");
             }
             break;
             break;
@@ -82,8 +81,6 @@ u16 cBufRead(CBufHandle cbuf, u8* dist, u8 sz) {
         case CIRC_TYPE_PCKG_VOLTAMPER:
         case CIRC_TYPE_PCKG_ALL:
             lenMsg = sz;
-            //		printf("CIRC_TYPE_PCKG_TEMP, CIRC_TYPE_PCKG_RSSI,
-            //CIRC_TYPE_PCKG_ENERGY, copyGetDatafromBuf\r\n");
             copyGetDatafromBuf(cbuf, dist, lenMsg, CIRC_TYPE_PCKG_ENERGY);
             break;
     }
@@ -153,7 +150,7 @@ u8 getLenMsgEnergyUart(CBufHandle cbuf) {
                     if (tail == cbuf->head) {
                         lenMsg = 0;
                         cBufReset(cbuf);
-                        D(printf("ERROR: NOHEADER\r\n"));
+                        LOG_CBUF(LEVEL_ERROR, "NOHEADER\r\n");
                     }
                     tail = (tail + 1) % cbuf->max;
 

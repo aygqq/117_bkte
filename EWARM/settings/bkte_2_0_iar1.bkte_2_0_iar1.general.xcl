@@ -2,13 +2,13 @@
 
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\bin\armstlink2.dll" 
 
-"C:\MyProjects\БКТЭ-117\117_bkte\EWARM\bkte_2_0_iar1\Exe\bkte_2_0_iar1.out" 
+"C:\MyProjects\Project 121\117_bkte\EWARM\bkte_2_0_iar1\Exe\bkte_2_0_iar1.out" 
 
 --plugin="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\bin\armbat.dll" 
 
 --device_macro="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\config\debugger\ST\STM32F4xx.dmac" 
 
---flash_loader="C:\MyProjects\БКТЭ-117\117_bkte\EWARM\bkte_2_0_iar1.board" 
+--flash_loader="C:\MyProjects\Project 121\117_bkte\EWARM\bkte_2_0_iar1.board" 
 
 
 

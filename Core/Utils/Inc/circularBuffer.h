@@ -32,7 +32,7 @@ typedef struct {
     u16         readAvailable;
     u16         remainRead;
     u16         remainWrite;
-    u16         max;  //of the buffer
+    u16         max;  // of the buffer
     u8          numPckgInBuf;
     u16         curLenMsg;
     CircTypeBuf type;
@@ -45,7 +45,7 @@ void cBufInit(CBufHandle cbuf, u8* buf, u16 szBuf, CircTypeBuf type);
 /// Free a circular buffer structure
 /// Requires: cbuf is valid and created by circular_buf_init
 /// Does not free data buffer; owner is responsible for that
-//void cBufFree(CBufHandle cbuf);
+// void cBufFree(CBufHandle cbuf);
 
 /// Reset the circular buffer to empty, head == tail. Data not cleared
 /// Requires: cbuf is valid and created by circular_buf_init
@@ -54,12 +54,12 @@ void cBufReset(CBufHandle cbuf);
 /// Put version 1 continues to add data if the buffer is full
 /// Old data is overwritten
 /// Requires: cbuf is valid and created by circular_buf_init
-//void cBufPut(CBufHandle cbuf, u8 data);
+// void cBufPut(CBufHandle cbuf, u8 data);
 
 /// Retrieve a value from the buffer
 /// Requires: cbuf is valid and created by circular_buf_init
 /// Returns 0 on success, -1 if the buffer is empty
-//u8 cBufGet(CBufHandle cbuf, u8* data);
+// u8 cBufGet(CBufHandle cbuf, u8* data);
 
 /// CHecks if the buffer is empty
 /// Requires: cbuf is valid and created by circular_buf_init
@@ -69,12 +69,12 @@ void cBufReset(CBufHandle cbuf);
 /// Checks if the buffer is full
 /// Requires: cbuf is valid and created by circular_buf_init
 /// Returns true if the buffer is full
-//u8 cBufIsFull(CBufHandle cbuf);
+// u8 cBufIsFull(CBufHandle cbuf);
 
 /// Check the capacity of the buffer
 /// Requires: cbuf is valid and created by circular_buf_init
 /// Returns the maximum capacity of the buffer
-//u8 cBufGetCapacity(CBufHandle cbuf);
+// u8 cBufGetCapacity(CBufHandle cbuf);
 
 /// Check the number of elements stored in the buffer
 /// Requires: cbuf is valid and created by circular_buf_init
@@ -92,7 +92,7 @@ u8  getLenMsgSimUart(CBufHandle cbuf);
 u8  getLenMsgEnergyUart(CBufHandle cbuf);
 u16 getLenMsgWirelessSens(CircularBuffer* cbuf);
 
-//TODO: int circular_buf_get_range(circular_buf_t cbuf, uint8_t *data, size_t len);
-//TODO: int circular_buf_put_range(circular_buf_t cbuf, uint8_t * data, size_t len);
+// TODO: int circular_buf_get_range(circular_buf_t cbuf, uint8_t *data, size_t len);
+// TODO: int circular_buf_put_range(circular_buf_t cbuf, uint8_t * data, size_t len);
 
-#endif  //CIRCULAR_BUFFER_H_
+#endif  // CIRCULAR_BUFFER_H_
