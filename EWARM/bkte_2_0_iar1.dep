@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>4</fileVersion>
-    <fileChecksum>2515350270</fileChecksum>
+    <fileChecksum>549634790</fileChecksum>
     <configuration>
         <name>bkte_2_0_iar1</name>
         <outputs>
@@ -800,6 +800,10 @@
         <file>
             <name>$PROJ_DIR$\..\Core\Tasks\Src\task_keep_alive.c</name>
             <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 461</file>
+                </tool>
                 <tool>
                     <name>BICOMP</name>
                     <file> 53</file>

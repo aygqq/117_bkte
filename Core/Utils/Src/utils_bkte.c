@@ -156,7 +156,7 @@ void getNumFirmware() {
     } else {
         u32 numFirmware = bufFirmware[0] << 24 | bufFirmware[1] << 16 | bufFirmware[2] << 8 | bufFirmware[3];
         LOG_WEB(LEVEL_INFO, "BKTE FIRMWARE v.:%d\r\n", (int)numFirmware);
-        if (numFirmware != BKTE_ID_FIRMWARE && numFirmware > 0 && numFirmware < 10) {
+        if (numFirmware != BKTE_ID_FIRMWARE && numFirmware > 0) {
             LOG_WEB(LEVEL_MAIN, "New FIRMWARE v.:%d\r\n", (int)numFirmware);
             bkte.idNewFirmware = (u8)numFirmware;
             vTaskResume(getNewBinHandle);
