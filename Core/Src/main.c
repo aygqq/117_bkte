@@ -127,10 +127,7 @@ int main(void) {
     MX_USART2_UART_Init();
     /* USER CODE BEGIN 2 */
     LOG(LEVEL_MAIN, "OK: start version %d\r\n", BKTE_ID_FIRMWARE);
-    FIRMWARE_INFO info = {.header = 0x1122334455667788,
-                          .numFirmware = BKTE_ID_FIRMWARE,
-                          .verFirmware = BKTE_VER_BETA_FIRMWARE,
-                          .numTrainCar = BKTE_ID_TRAINCAR};
+
     cBufInit(&rxUart1CircBuf, uart1Buf, SZ_BUF_ENERGY_FROM_UART1, CIRC_TYPE_ENERGY_UART);
     cBufInit(&circBufAllPckgs, bufPckgs, SZ_PAGE, CIRC_TYPE_PCKG_ALL);
     HAL_GPIO_WritePin(GPIOB, MEM_HOLD_Pin, GPIO_PIN_SET);

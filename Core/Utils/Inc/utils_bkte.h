@@ -70,6 +70,28 @@
 
 #define BKTE_BIG_DIF_RTC_SERVTIME 600
 
+typedef struct {
+    u8 idBoot;
+    u8 idFirmware;
+    u8 idNewFirmware;
+    u8 szNewFirmware;
+} fw_info_t;
+
+typedef struct {
+    fw_info_t fw;
+    u8        server;
+    u32       idMCU[3];
+    u64       imei;
+    u8        niacIdent[40];
+} bkte_info_t;
+
+typedef struct {
+    u8 isSentData;
+    u8 isTCPOpen;
+    u8 csq;
+    u8 isSpiFlashReady;
+} bkte_state_t;
+
 typedef union {
     struct {
         u16 simAT      : 1;
@@ -164,25 +186,12 @@ typedef struct {
     HardWareStatus hwStat;
     PWRInfo        pwrInfo;
     ErrorFlags     erFlags;
-    u8             isSentData;
-    u8             isTCPOpen;
-    u8             csq;
-    u8             isSpiFlashReady;
     LastData       lastData;
 
-    u8 idBoot;
-    u8 idFirmware;
-    u8 idNewFirmware;
-    u8 szNewFirmware;
-
-    u64 imei;
-    u8  niacIdent[40];
-    u32 idMCU[3];
-    u8  server;
-
-    FIRMWARE_INFO info;
-    time_stat_t   timers;
-    statistics_t  stat;
+    bkte_state_t state;
+    bkte_info_t  info;
+    time_stat_t  timers;
+    statistics_t stat;
 } BKTE;
 
 typedef enum { NUM_FILE_ENERGY = 0,

@@ -115,8 +115,8 @@ void makeAuthorizePckg(WebPckg* pPckg, u8 server) {
         numSession++;
         addInfo(pPckg, (u8*)&niacPream[0], 1);
         addInfo(pPckg, (u8*)&numSession, 2);
-        addInfo(pPckg, (u8*)&bkte.imei, 8);
-        addInfo(pPckg, (u8*)bkte.niacIdent, 40);
+        addInfo(pPckg, (u8*)&bkte.info.imei, 8);
+        addInfo(pPckg, (u8*)bkte.info.niacIdent, 40);
 
         closeWebPckg(pPckg, server);
     }
@@ -159,7 +159,7 @@ ErrorStatus sendWebPckgData(u8 CMD_DATA, u8* data, u8 sz, u8 szReq, u8* idMCU) {
     req[0] = CMD_DATA;
     req[1] = szReq;
     if ((curPckg = getFreePckgReq()) != NULL) {
-        initWebPckg(curPckg, sz + 2, 0, (u8*)&bkte.idMCU, SERVER_MOTZ);
+        initWebPckg(curPckg, sz + 2, 0, (u8*)&bkte.info.idMCU, SERVER_MOTZ);
         if (sz) {
             memcpy(req + 2, data, sz);
         }

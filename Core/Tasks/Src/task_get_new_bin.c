@@ -66,7 +66,7 @@ void big_update_func() {
     closeTcp();
     osMutexRelease(mutexWebHandle);
     while (!(szSoft = getSzFirmware())) {};
-    bkte.szNewFirmware = szSoft;
+    bkte.info.fw.szNewFirmware = szSoft;
     if (sendMsgFWUpdateBegin() != SUCCESS) {
         LOG(LEVEL_ERROR, "Send FW UPDATED\r\n");
     }
@@ -92,7 +92,7 @@ void big_update_func() {
             memset(partFirmware, 0xFF, SZ_PART_FIRMW + 1);
 
             osMutexWait(mutexWebHandle, osWaitForever);
-            if (!bkte.isTCPOpen) {
+            if (!bkte.state.isTCPOpen) {
                 while (openTcp(SERVER_MOTZ) != TCP_OK) {}
                 cntFailTCPReq = 0;
             }
@@ -120,7 +120,7 @@ void big_update_func() {
             }
         } else {
             osMutexWait(mutexWebHandle, osWaitForever);
-            if (!bkte.isTCPOpen) {
+            if (!bkte.state.isTCPOpen) {
                 while (openTcp(SERVER_MOTZ) != TCP_OK) {}
             }
             osMutexRelease(mutexWebHandle);
@@ -192,7 +192,7 @@ void lockAllTasks() {
 u32 getSzFirmware() {
     u8  bufSzFirmware[4];
     u8* idMCU;
-    idMCU = (u8*)&bkte.idMCU;
+    idMCU = (u8*)&bkte.info.idMCU;
 
     if (generateWebPckgReq(CMD_REQUEST_SZ_FIRMWARE, NULL, 0, SZ_REQUEST_GET_SZ_FIRMWARE, bufSzFirmware, 4, idMCU) == ERROR) {
         LOG(LEVEL_ERROR, "sz firmware\r\n");
@@ -209,7 +209,7 @@ ErrorStatus getPartFirmware(u8* reqData, u8* answBuf, u16 szAnsw, u8 szReq) {
     ErrorStatus ret = SUCCESS;
 
     u8* idMCU;
-    idMCU = (u8*)&bkte.idMCU;
+    idMCU = (u8*)&bkte.info.idMCU;
 
     curPckg = createWebPckgReq(CMD_REQUEST_PART_FIRMWARE, reqData, szReq, SZ_REQUEST_GET_PART_FIRMWARE, idMCU);
     osMutexWait(mutexWebHandle, osWaitForever);

@@ -40,7 +40,7 @@ void spiFlashInit(u8 *buf) {
     spiFlash64.capacityKb = (spiFlash64.secCnt * spiFlash64.secSz) / 1024;
     spiFlash64.headNumPg = 0;
 
-    bkte.isSpiFlashReady = 0;
+    bkte.state.isSpiFlashReady = 0;
 
     osMutexRelease(mutexSpiFlashHandle);
 
@@ -219,9 +219,9 @@ u8 spiFlashReadLastPg(u8 *pBuf, u32 sz, u32 offset) {
 
     while (pdBad) {
         LOG_FLASH(LEVEL_INFO, "RdPg %d\r\n", numPage);
-        if (!bkte.isSpiFlashReady && numPage == numPgFirstES) {
+        if (!bkte.state.isSpiFlashReady && numPage == numPgFirstES) {
             LOG_FLASH(LEVEL_MAIN, "SPI FLASH READY\r\n\r\n");
-            bkte.isSpiFlashReady = 1;
+            bkte.state.isSpiFlashReady = 1;
         }
 
         if ((pdBad = spiFlashIsPgBad(numPage)) == 1) {
@@ -242,7 +242,7 @@ u8 spiFlashReadLastPg(u8 *pBuf, u32 sz, u32 offset) {
     len = isDataFromFlashOk(pBuf, 256);
     if (len == 0) {
         LOG_FLASH(LEVEL_ERROR, "bad crc isDataFromFlashOk()\r\n");
-        if (bkte.isSpiFlashReady) {
+        if (bkte.state.isSpiFlashReady) {
             spiFlashMarkPgBad(numPage);
         }
     }

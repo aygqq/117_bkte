@@ -29,17 +29,16 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_ll_iwdg.h"
-#include "stm32f4xx_ll_rcc.h"
 #include "stm32f4xx_ll_bus.h"
-#include "stm32f4xx_ll_system.h"
-#include "stm32f4xx_ll_exti.h"
 #include "stm32f4xx_ll_cortex.h"
-#include "stm32f4xx_ll_utils.h"
-#include "stm32f4xx_ll_pwr.h"
 #include "stm32f4xx_ll_dma.h"
+#include "stm32f4xx_ll_exti.h"
 #include "stm32f4xx_ll_gpio.h"
+#include "stm32f4xx_ll_iwdg.h"
+#include "stm32f4xx_ll_pwr.h"
+#include "stm32f4xx_ll_rcc.h"
+#include "stm32f4xx_ll_system.h"
+#include "stm32f4xx_ll_utils.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -69,60 +68,60 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BAT_PWR_EN_Pin GPIO_PIN_0
-#define BAT_PWR_EN_GPIO_Port GPIOC
-#define IS_CHRG_BAT_Pin GPIO_PIN_1
-#define IS_CHRG_BAT_GPIO_Port GPIOC
-#define SIM_PWR_EN_Pin GPIO_PIN_2
-#define SIM_PWR_EN_GPIO_Port GPIOC
-#define ADC_BAT_Pin GPIO_PIN_0
-#define ADC_BAT_GPIO_Port GPIOA
-#define USART2_RE_Pin GPIO_PIN_1
-#define USART2_RE_GPIO_Port GPIOA
-#define SPI1_CS_LORA_Pin GPIO_PIN_4
+#define BAT_PWR_EN_Pin         GPIO_PIN_0
+#define BAT_PWR_EN_GPIO_Port   GPIOC
+#define IS_CHRG_BAT_Pin        GPIO_PIN_1
+#define IS_CHRG_BAT_GPIO_Port  GPIOC
+#define SIM_PWR_EN_Pin         GPIO_PIN_2
+#define SIM_PWR_EN_GPIO_Port   GPIOC
+#define ADC_BAT_Pin            GPIO_PIN_0
+#define ADC_BAT_GPIO_Port      GPIOA
+#define USART2_RE_Pin          GPIO_PIN_1
+#define USART2_RE_GPIO_Port    GPIOA
+#define SPI1_CS_LORA_Pin       GPIO_PIN_4
 #define SPI1_CS_LORA_GPIO_Port GPIOA
-#define IRQ_LORA_Pin GPIO_PIN_4
-#define IRQ_LORA_GPIO_Port GPIOC
-#define IRQ_LORA_EXTI_IRQn EXTI4_IRQn
-#define PWR_STATE_Pin GPIO_PIN_1
-#define PWR_STATE_GPIO_Port GPIOB
-#define PWR_STATE_EXTI_IRQn EXTI1_IRQn
-#define MEM_HOLD_Pin GPIO_PIN_2
-#define MEM_HOLD_GPIO_Port GPIOB
-#define ONEWIRE_3_EN_Pin GPIO_PIN_8
+#define IRQ_LORA_Pin           GPIO_PIN_4
+#define IRQ_LORA_GPIO_Port     GPIOC
+#define IRQ_LORA_EXTI_IRQn     EXTI4_IRQn
+#define PWR_STATE_Pin          GPIO_PIN_1
+#define PWR_STATE_GPIO_Port    GPIOB
+#define PWR_STATE_EXTI_IRQn    EXTI1_IRQn
+#define MEM_HOLD_Pin           GPIO_PIN_2
+#define MEM_HOLD_GPIO_Port     GPIOB
+#define ONEWIRE_3_EN_Pin       GPIO_PIN_8
 #define ONEWIRE_3_EN_GPIO_Port GPIOE
-#define ONEWIRE_2_EN_Pin GPIO_PIN_9
+#define ONEWIRE_2_EN_Pin       GPIO_PIN_9
 #define ONEWIRE_2_EN_GPIO_Port GPIOE
-#define ONEWIRE_4_EN_Pin GPIO_PIN_10
+#define ONEWIRE_4_EN_Pin       GPIO_PIN_10
 #define ONEWIRE_4_EN_GPIO_Port GPIOE
-#define ONEWIRE_1_EN_Pin GPIO_PIN_11
+#define ONEWIRE_1_EN_Pin       GPIO_PIN_11
 #define ONEWIRE_1_EN_GPIO_Port GPIOE
-#define RF_PWR_Pin GPIO_PIN_10
-#define RF_PWR_GPIO_Port GPIOB
-#define SPI2_CS_MEM_Pin GPIO_PIN_12
-#define SPI2_CS_MEM_GPIO_Port GPIOB
-#define GSM_PWRKEY_Pin GPIO_PIN_13
-#define GSM_PWRKEY_GPIO_Port GPIOD
-#define UART1_RE_Pin GPIO_PIN_8
-#define UART1_RE_GPIO_Port GPIOA
-#define SD_PWR_EN_Pin GPIO_PIN_0
-#define SD_PWR_EN_GPIO_Port GPIOD
-#define SD_DETECTED_Pin GPIO_PIN_1
-#define SD_DETECTED_GPIO_Port GPIOD
-#define LED1G_Pin GPIO_PIN_3
-#define LED1G_GPIO_Port GPIOD
-#define LED3G_Pin GPIO_PIN_4
-#define LED3G_GPIO_Port GPIOD
-#define LED4R_Pin GPIO_PIN_5
-#define LED4R_GPIO_Port GPIOD
-#define LED4G_Pin GPIO_PIN_6
-#define LED4G_GPIO_Port GPIOD
-#define LED2R_Pin GPIO_PIN_7
-#define LED2R_GPIO_Port GPIOD
-#define LED2G_Pin GPIO_PIN_0
-#define LED2G_GPIO_Port GPIOE
-#define LED1R_Pin GPIO_PIN_1
-#define LED1R_GPIO_Port GPIOE
+#define RF_PWR_Pin             GPIO_PIN_10
+#define RF_PWR_GPIO_Port       GPIOB
+#define SPI2_CS_MEM_Pin        GPIO_PIN_12
+#define SPI2_CS_MEM_GPIO_Port  GPIOB
+#define GSM_PWRKEY_Pin         GPIO_PIN_13
+#define GSM_PWRKEY_GPIO_Port   GPIOD
+#define UART1_RE_Pin           GPIO_PIN_8
+#define UART1_RE_GPIO_Port     GPIOA
+#define SD_PWR_EN_Pin          GPIO_PIN_0
+#define SD_PWR_EN_GPIO_Port    GPIOD
+#define SD_DETECTED_Pin        GPIO_PIN_1
+#define SD_DETECTED_GPIO_Port  GPIOD
+#define LED1G_Pin              GPIO_PIN_3
+#define LED1G_GPIO_Port        GPIOD
+#define LED3G_Pin              GPIO_PIN_4
+#define LED3G_GPIO_Port        GPIOD
+#define LED4R_Pin              GPIO_PIN_5
+#define LED4R_GPIO_Port        GPIOD
+#define LED4G_Pin              GPIO_PIN_6
+#define LED4G_GPIO_Port        GPIOD
+#define LED2R_Pin              GPIO_PIN_7
+#define LED2R_GPIO_Port        GPIOD
+#define LED2G_Pin              GPIO_PIN_0
+#define LED2G_GPIO_Port        GPIOE
+#define LED1R_Pin              GPIO_PIN_1
+#define LED1R_GPIO_Port        GPIOE
 /* USER CODE BEGIN Private defines */
 #include "debug.h"
 #include "stdbool.h"
@@ -197,14 +196,6 @@ typedef struct {
     u8 month;
     u8 day;
 } DateTime;
-
-typedef struct {
-    u64  header;
-    u8   numFirmware;
-    char verFirmware;
-    u8   numTrainCar;
-    u8   idBoot;
-} FIRMWARE_INFO;
 
 typedef struct {
     char* ourTcpAddr;

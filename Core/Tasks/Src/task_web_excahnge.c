@@ -28,13 +28,13 @@ void taskWebExchange(void const* argument) {
     for (;;) {
         iwdgTaskReg |= IWDG_TASK_REG_WEB_EXCH;
 
-        // if (bkte.isTCPOpen != bkte.server) {
+        // if (bkte.state.isTCPOpen != bkte.info.server) {
         //     sessionStep = SESSION_OPENING;
         // }
 
         switch (sessionStep) {
             case SESSION_OPENING:
-                if (bkte.isTCPOpen == bkte.server) {
+                if (bkte.state.isTCPOpen == bkte.info.server) {
                     sessionStep = SESSION_AUTHORIZE;
                     continue;
                 }
@@ -45,13 +45,13 @@ void taskWebExchange(void const* argument) {
                 LOG_WEB(LEVEL_INFO, "{--- Start sending DATA\r\n");
 
                 osMutexWait(mutexWebHandle, osWaitForever);
-                if (openTcp(bkte.server) != TCP_OK) {
+                if (openTcp(bkte.info.server) != TCP_OK) {
                     osMutexRelease(mutexSessionHandle);
                 }
                 osMutexRelease(mutexWebHandle);
                 break;
             case SESSION_AUTHORIZE:
-                if (bkte.server == SERVER_MOTZ) {
+                if (bkte.info.server == SERVER_MOTZ) {
                     sessionStep = SESSION_SENDING;
                     continue;
                 }
@@ -77,13 +77,13 @@ void taskWebExchange(void const* argument) {
                 }
 
                 osMutexWait(mutexWebHandle, osWaitForever);
-                if (bkte.server == SERVER_MOTZ) {
+                if (bkte.info.server == SERVER_MOTZ) {
                     memcpy(&order_num, &curPckg->buf[2], 4);
                 } else {
                     memcpy(&order_num, &curPckg->buf[1], 4);
                 }
                 u32 ttt = HAL_GetTick();
-                statSend = sendTcp(bkte.server, curPckg->buf, curPckg->shift);
+                statSend = sendTcp(bkte.info.server, curPckg->buf, curPckg->shift);
                 ttt = HAL_GetTick() - ttt;
                 if (statSend == TCP_OK) {
                     LOG_WEB(LEVEL_INFO, "TCP Send: num %d, sz %d, time %d\r\n", order_num, curPckg->shift, ttt);
@@ -96,7 +96,7 @@ void taskWebExchange(void const* argument) {
                 osMutexRelease(mutexWebHandle);
                 break;
             case SESSION_CLOSING:
-                if (bkte.server == SERVER_MOTZ) {
+                if (bkte.info.server == SERVER_MOTZ) {
                     sessionStep = SESSION_TCP_CLOSING;
                     continue;
                 }
@@ -107,7 +107,7 @@ void taskWebExchange(void const* argument) {
                 }
                 break;
             case SESSION_TCP_CLOSING:
-                if (!bkte.isTCPOpen) {
+                if (!bkte.state.isTCPOpen) {
                     sessionStep = SESSION_OPENING;
                     LOG_WEB(LEVEL_INFO, "---} Finish sending DATA\r\n");
                 } else {
@@ -137,11 +137,11 @@ ErrorStatus sendAuthorizePckg() {
         return ERROR;
     }
 
-    makeAuthorizePckg(pckg, bkte.server);
+    makeAuthorizePckg(pckg, bkte.info.server);
 
     osMutexWait(mutexWebHandle, osWaitForever);
     u32 ttt = HAL_GetTick();
-    statSend = sendTcp(bkte.server, pckg->buf, pckg->shift);
+    statSend = sendTcp(bkte.info.server, pckg->buf, pckg->shift);
     ttt = HAL_GetTick() - ttt;
     LOG_WEB(LEVEL_INFO, "TCP Send: authorize, time %d\r\n", ttt);
     if (statSend != TCP_OK) ret = ERROR;
@@ -165,11 +165,11 @@ ErrorStatus sendEndSessionPckg() {
         return ERROR;
     }
 
-    makeEndSessionPckg(pckg, bkte.server);
+    makeEndSessionPckg(pckg, bkte.info.server);
 
     osMutexWait(mutexWebHandle, osWaitForever);
     u32 ttt = HAL_GetTick();
-    statSend = sendTcp(bkte.server, pckg->buf, pckg->shift);
+    statSend = sendTcp(bkte.info.server, pckg->buf, pckg->shift);
     ttt = HAL_GetTick() - ttt;
     LOG_WEB(LEVEL_INFO, "TCP Send: end session, time %d\r\n", ttt);
     if (statSend != TCP_OK) ret = ERROR;

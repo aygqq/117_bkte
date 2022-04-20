@@ -64,11 +64,11 @@ void taskCreateWebPckg(void const *argument) {
                 break;
             }
             clearAllPages();
-            if (bkte.csq < 10) {
+            if (bkte.state.csq < 10) {
                 amntPages = delayPages > 3 ? 3 : delayPages;
-            } else if (bkte.csq < 15) {
+            } else if (bkte.state.csq < 15) {
                 amntPages = delayPages > 4 ? 4 : delayPages;
-            } else if (bkte.csq <= 31) {
+            } else if (bkte.state.csq <= 31) {
                 amntPages = delayPages > 5 ? 5 : delayPages;
             } else {
                 amntPages = delayPages > 3 ? 3 : delayPages;
@@ -82,7 +82,7 @@ void taskCreateWebPckg(void const *argument) {
             szAllPages = getSzAllPages();
             if (szAllPages) {
                 // LOG_WEB(LEVEL_INFO, "Create package\r\n");
-                initWebPckg(curPckg, szAllPages, 0, (u8 *)&bkte.idMCU, bkte.server);
+                initWebPckg(curPckg, szAllPages, 0, (u8 *)&bkte.info.idMCU, bkte.info.server);
                 addPagesToWebPckg(curPckg);
                 if (osMessagePut(queueWebPckgHandle, (u32)curPckg, 180000) != osOK) {
                     bkte.stat.queueErrCount++;
@@ -104,7 +104,7 @@ void taskCreateWebPckg(void const *argument) {
 
         if (!delayPages) {
             LOG_WEB(LEVEL_DEBUG, "no pckg in spiflash\r\n");
-            bkte.isSentData = 1;
+            bkte.state.isSentData = 1;
         }
         // osDelay(1000);
     }
@@ -172,6 +172,6 @@ void addPagesToWebPckg(WebPckg *pckg) {
             addInfoToWebPckg(pckg, allPages[i]->buf, allPages[i]->iter, allPages[i]->iter / allPages[i]->szType, allPages[i]->type);
         }
     }
-    closeWebPckg(pckg, bkte.server);
+    closeWebPckg(pckg, bkte.info.server);
     // showWebPckg(pckg);
 }

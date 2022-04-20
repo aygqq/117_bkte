@@ -19,7 +19,7 @@ void simInit() {
     u8    simBadAnsw = 0;
     u8    isInit = 0;
 
-    bkte.isTCPOpen = 0;
+    bkte.state.isTCPOpen = 0;
 
     while (!isInit) {
         bkte.stat.simResetCnt++;
@@ -123,7 +123,7 @@ u8 simCheckCSQ() {
     retMsg = simTxATCmd("AT+CSQ\r\n", 8, 1000);  // check signal level
     token = strtok(retMsg, SIM_SEPARATOR_TEXT);
     csq = (token != NULL) && (strlen(token) > 8) ? atoi(token + 6) : 0;
-    bkte.csq = csq;
+    bkte.state.csq = csq;
     return csq;
 }
 
@@ -264,7 +264,7 @@ u8 simTCPSend(u8* data, u16 sz) {
         return SIM_FAIL;
     }
     retMsg = simDownloadData(data, sz);
-    // if (bkte.server == SERVER_NIAC) {
+    // if (bkte.info.server == SERVER_NIAC) {
     //     waitIdle("", &(uInfoSim.irqFlags), 50, 1000);
     // }
     // LOG_SIM(LEVEL_INFO, "Send Ret: %s\r\n", retMsg);
@@ -334,7 +334,7 @@ u8 procReturnStatus(u8 ret) {
 
 u8 openTcp(u8 server) {
     u8 ret = TCP_OK;
-    if (bkte.isTCPOpen) {
+    if (bkte.state.isTCPOpen) {
         closeTcp();
     }
 
@@ -354,7 +354,7 @@ u8 openTcp(u8 server) {
         ret = TCP_OPEN_ER;
     }
     if (ret == TCP_OK) {
-        bkte.isTCPOpen = server;
+        bkte.state.isTCPOpen = server;
         bkte.stat.simOpenCnt++;
         // LOG_SIM(LEVEL_INFO, "TCP CONNECTED\r\n");
     }
@@ -374,7 +374,7 @@ u8 closeTcp() {
         ret = TCP_CLOSE_ER;
     }
     if (ret == TCP_OK) {
-        bkte.isTCPOpen = 0;
+        bkte.state.isTCPOpen = 0;
         LOG_SIM(LEVEL_INFO, "TCP CLOSED\r\n");
     }
 
@@ -388,7 +388,7 @@ u8 sendTcp(u8 server, u8* data, u16 sz) {
     u8 ret = TCP_OK;
     u8 cnt = 0;
     // static u32 count = 0;
-    while (bkte.isTCPOpen != server) {
+    while (bkte.state.isTCPOpen != server) {
         if (cnt == 15) {
             ret = TCP_CONNECT_ER;
             break;
@@ -413,9 +413,9 @@ u8 sendTcp(u8 server, u8* data, u16 sz) {
     } else {
         bkte.stat.simErrCnt++;
     }
-    if (bkte.csq < 15) {
+    if (bkte.state.csq < 15) {
         bkte.stat.simLowCsqCnt++;
-    } else if (bkte.csq < 20) {
+    } else if (bkte.state.csq < 20) {
         bkte.stat.simLowCsqCnt++;
     } else {
         bkte.stat.simHighCsqCnt++;

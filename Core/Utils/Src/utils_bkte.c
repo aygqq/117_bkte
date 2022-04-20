@@ -41,16 +41,16 @@ void bkteInit() {
     }
 
     for (u8 i = 0; i < 3; i++)
-        bkte.idMCU[i] = getFlashData(BKTE_ADDR_ID_MCU + (i * 4));
-    LOG(LEVEL_MAIN, "%08x%08x%08x\r\n", (uint)bkte.idMCU[0], (uint)bkte.idMCU[1], (uint)bkte.idMCU[2]);
+        bkte.info.idMCU[i] = getFlashData(BKTE_ADDR_ID_MCU + (i * 4));
+    LOG(LEVEL_MAIN, "%08x%08x%08x\r\n", (uint)bkte.info.idMCU[0], (uint)bkte.info.idMCU[1], (uint)bkte.info.idMCU[2]);
 
     bkte.hwStat.regHardWareStat = 0;
     bkte.erFlags.errReg = 0;
-    bkte.idFirmware = BKTE_ID_FIRMWARE;
-    bkte.info.idBoot = BKTE_ID_BOOT;
-    bkte.server = SERVER_NIAC;
+    bkte.info.fw.idFirmware = BKTE_ID_FIRMWARE;
+    bkte.info.fw.idBoot = BKTE_ID_BOOT;
+    bkte.info.server = SERVER_NIAC;
     u8 id[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
-    memcpy(bkte.niacIdent, id, 40);
+    memcpy(bkte.info.niacIdent, id, 40);
     memset(&bkte.stat, 0, sizeof(statistics_t));
     memset(&bkte.timers, 0, sizeof(time_stat_t));
 }
@@ -119,7 +119,7 @@ void setUnixTimeStamp(u32 timeStamp) {
 
 ErrorStatus getServerTime() {
     u8 bufTime[4];
-    if (generateWebPckgReq(CMD_REQUEST_SERVER_TIME, NULL, 0, SZ_REQUEST_GET_SERVER_TIME, bufTime, 4, (u8*)&bkte.idMCU) == ERROR) {
+    if (generateWebPckgReq(CMD_REQUEST_SERVER_TIME, NULL, 0, SZ_REQUEST_GET_SERVER_TIME, bufTime, 4, (u8*)&bkte.info.idMCU) == ERROR) {
         LOG_WEB(LEVEL_ERROR, "ERROR: bad server time\r\n");
         return ERROR;
     } else {
@@ -151,14 +151,14 @@ ErrorStatus getServerTime() {
 
 void getNumFirmware() {
     u8 bufFirmware[4];
-    if (generateWebPckgReq(CMD_REQUEST_NUM_FIRMWARE, NULL, 0, SZ_REQUEST_GET_NUM_FIRMWARE, bufFirmware, 4, (u8*)&bkte.idMCU) == ERROR) {
+    if (generateWebPckgReq(CMD_REQUEST_NUM_FIRMWARE, NULL, 0, SZ_REQUEST_GET_NUM_FIRMWARE, bufFirmware, 4, (u8*)&bkte.info.idMCU) == ERROR) {
         LOG_WEB(LEVEL_ERROR, "ERROR: getBKTENumFw()\r\n");
     } else {
         u32 numFirmware = bufFirmware[0] << 24 | bufFirmware[1] << 16 | bufFirmware[2] << 8 | bufFirmware[3];
         LOG_WEB(LEVEL_INFO, "BKTE FIRMWARE v.:%d\r\n", (int)numFirmware);
         if (numFirmware != BKTE_ID_FIRMWARE && numFirmware > 0) {
             LOG_WEB(LEVEL_MAIN, "New FIRMWARE v.:%d\r\n", (int)numFirmware);
-            bkte.idNewFirmware = (u8)numFirmware;
+            bkte.info.fw.idNewFirmware = (u8)numFirmware;
             vTaskResume(getNewBinHandle);
         }
     }
