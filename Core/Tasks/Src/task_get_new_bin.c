@@ -1,7 +1,7 @@
-#include "../Tasks/Inc/task_get_new_bin.h"
+#include "task_get_new_bin.h"
 
-#include "../Tasks/Inc/task_iwdg.h"
-#include "../Tasks/Inc/task_keep_alive.h"
+#include "task_iwdg.h"
+#include "task_keep_alive.h"
 #include "utils_crc.h"
 #include "utils_pckgs_manager.h"
 

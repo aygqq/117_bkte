@@ -1,6 +1,6 @@
-#include "../Tasks/Inc/task_keep_alive.h"
+#include "task_keep_alive.h"
 
-#include "../Tasks/Inc/task_iwdg.h"
+#include "task_iwdg.h"
 #include "utils_flash.h"
 #include "utils_pckgs_manager.h"
 

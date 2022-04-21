@@ -1,5 +1,5 @@
-#include "../Tasks/Inc/task_iwdg.h"
-#include "../Tasks/Inc/task_web_exchange.h"
+#include "task_iwdg.h"
+#include "task_web_exchange.h"
 
 extern u16 iwdgTaskReg;
 

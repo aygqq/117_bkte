@@ -1,7 +1,8 @@
-#include "../Tasks/Inc/task_get_energy.h"
+#include "task_get_energy.h"
 
-#include "../Tasks/Inc/task_iwdg.h"
-#include "../Tasks/Inc/task_keep_alive.h"
+#include "task_iwdg.h"
+#include "task_keep_alive.h"
+#include "tim.h"
 
 extern u16 iwdgTaskReg;
 
@@ -26,6 +27,27 @@ static PckgEnergy    pckgEnergy;
 u8 isVoltAmperFresh(PckgVoltAmper *pckg);
 u8 isEnergyFresh(PckgEnergy *pckg);
 
+volatile uint16_t adc[4000] = {0};
+int               cnt = 0;
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+    u32 sum = 0;
+    u16 max = 0;
+    u16 min = 4096;
+    if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
+    {
+        for (int i = 0; i < 1000; i++) {
+            sum += adc[4 * i + 1];
+            if (adc[4 * i + 1] > max) max = adc[4 * i + 1];
+            if (adc[4 * i + 1] < min) min = adc[4 * i + 1];
+            // printf("%d\t%d\n", (cnt * 1000 + i), adc[4 * i + 1]);
+        }
+        printf("%d\t%d\t%d\r\n", sum / 1000, min, max);
+        bkte.pwrInfo.adcVoltBat = (u16)(adc[0] * 3.3 * 2 / 4096 * 100);
+        cnt++;
+    }
+}
+
 // u8 test = 0;
 
 void taskGetEnergy(void const *argument) {
@@ -33,12 +55,14 @@ void taskGetEnergy(void const *argument) {
     u8  numIteration = 0;
     u16 retLen;
 
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&adc, 4000);
+    HAL_TIM_Base_Start(&htim2);
+
     spiFlashInit(circBufAllPckgs.buf);
     cBufReset(&circBufAllPckgs);
     sdInit();
     simInit();
-    while (getServerTime() != SUCCESS)
-        ;
+    while (getServerTime() != SUCCESS) {};
 
     sendInitTelemetry();
     unLockTasks();

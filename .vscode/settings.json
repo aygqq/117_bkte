@@ -13,6 +13,7 @@
         "main.h": "c",
         "task_get_energy.h": "c",
         "task_create_webpckg.h": "c",
-        "utils_flash.h": "c"
+        "utils_flash.h": "c",
+        "task_keep_alive.h": "c"
     }
 }
