@@ -59,12 +59,11 @@
 #include "fatfs.h"
 #include "simcom.h"
 #include "utils_bkte.h"
+#include "utils_flash.h"
 
-CircularBuffer rxUart1CircBuf = {.buf = NULL, .max = 0};
 CircularBuffer circBufAllPckgs = {.buf = NULL, .max = 0};
 
 u8 bufPckgs[SZ_PAGE];
-u8 uart1Buf[SZ_BUF_ENERGY_FROM_UART1];
 
 BKTE bkte;
 Urls urls;
@@ -124,9 +123,14 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-    LOG(LEVEL_MAIN, "OK: start version %d\r\n", BKTE_ID_FIRMWARE);
+    volatile fw_info_t info = {.header = 0x1122334455667788,
+                               .idFirmware = BKTE_ID_FIRMWARE,
+                               .idBoot = (u8)getFlashData(FLASH_ADDR_ID_BOOT)};
 
-    cBufInit(&rxUart1CircBuf, uart1Buf, SZ_BUF_ENERGY_FROM_UART1, CIRC_TYPE_ENERGY_UART);
+    memcpy(&bkte.info.fw, (void*)&info, sizeof(fw_info_t));
+
+    LOG(LEVEL_MAIN, "Firmware: %d.%d\r\n\r\n", info.idFirmware, info.idBoot);
+
     cBufInit(&circBufAllPckgs, bufPckgs, SZ_PAGE, CIRC_TYPE_PCKG_ALL);
     HAL_GPIO_WritePin(GPIOB, MEM_HOLD_Pin, GPIO_PIN_SET);
     bkteInit();
@@ -263,6 +267,8 @@ u8 waitIdleCnt(char* waitStr, IrqFlags* pFlags, u8 cnt, u16 pause, u32 timeout) 
 void urlsInit() {
     urls.ourTcpAddr = URL_TCP_ADDR;
     urls.ourTcpPort = URL_TCP_PORT;
+    urls.niacTcpAddr = URL_NIAC_TCP_ADDR;
+    urls.niacTcpPort = URL_NIAC_TCP_PORT;
 }
 
 /* USER CODE END 4 */

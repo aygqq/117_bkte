@@ -7,15 +7,13 @@
 
 extern u16 iwdgTaskReg;
 
-extern osThreadId getEnergyHandle;
+extern osThreadId getCurrentHandle;
 extern osThreadId webExchangeHandle;
-extern osThreadId getTempHandle;
 extern osThreadId getNewBinHandle;
 extern osThreadId keepAliveHandle;
 extern osThreadId createWebPckgHandle;
-extern osThreadId wirelessSensHandle;
 extern osTimerId  timerPowerOffHandle;
-extern osMutexId  mutexWriteToEnergyBufHandle;
+extern osMutexId  mutexBigBufHandle;
 extern osMutexId  mutexWebHandle;
 extern osMutexId  mutexRTCHandle;
 extern osMutexId  mutexSDHandle;
@@ -168,21 +166,19 @@ void updBootInfo() {
 }
 
 void lockAllTasks() {
-    osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
+    osMutexWait(mutexBigBufHandle, osWaitForever);
     osMutexWait(mutexRTCHandle, osWaitForever);
     osMutexWait(mutexSpiFlashHandle, osWaitForever);
     osMutexWait(mutexSDHandle, osWaitForever);
     osMutexWait(mutexWebHandle, osWaitForever);
 
     vTaskSuspend(webExchangeHandle);
-    vTaskSuspend(getEnergyHandle);
-    vTaskSuspend(getTempHandle);
+    vTaskSuspend(getCurrentHandle);
     vTaskSuspend(keepAliveHandle);
     // vTaskSuspend(loraHandle);
     vTaskSuspend(createWebPckgHandle);
-    vTaskSuspend(wirelessSensHandle);
 
-    osMutexRelease(mutexWriteToEnergyBufHandle);
+    osMutexRelease(mutexBigBufHandle);
     osMutexRelease(mutexRTCHandle);
     osMutexRelease(mutexSpiFlashHandle);
     osMutexRelease(mutexSDHandle);

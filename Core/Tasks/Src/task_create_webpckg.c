@@ -8,15 +8,13 @@ extern osThreadId    webExchangeHandle;
 extern osThreadId    keepAliveHandle;
 extern osThreadId    getNewBinHandle;
 extern osThreadId    createWebPckgHandle;
-extern osMutexId     mutexWriteToEnergyBufHandle;
+extern osMutexId     mutexBigBufHandle;
 extern osMutexId     mutexWebHandle;
 extern osMessageQId  queueWebPckgHandle;
 extern osSemaphoreId semCreateWebPckgHandle;
 extern osSemaphoreId semSendWebPckgHandle;
 
-extern CircularBuffer circBufPckgEnergy;
-extern u8             SZ_PCKGENERGY;
-static char           tmpBufPage[256];
+static char tmpBufPage[256];
 
 static Page     pgEnergy = {.type = CMD_DATA_ENERGY, .szType = SZ_CMD_ENERGY};
 static Page     pgTemp = {.type = CMD_DATA_TEMP, .szType = SZ_CMD_TEMP};

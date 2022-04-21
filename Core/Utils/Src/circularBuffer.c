@@ -59,22 +59,7 @@ u16 cBufRead(CBufHandle cbuf, u8* dist, u8 sz) {
             }
             break;
         case CIRC_TYPE_ENERGY_UART:
-            if ((lenMsg = getLenMsgEnergyUart(cbuf)) &&
-                lenMsg == BKTE_SZ_UART_MSG) {
-                copyGetDatafromBuf(cbuf, dist, lenMsg, CIRC_TYPE_ENERGY_UART);
-            } else if (lenMsg) {
-                cBufReset(cbuf);
-                LOG_CBUF(LEVEL_ERROR, "CIRC_TYPE_ENERGY_UART lenMsg: %d\r\n", lenMsg);
-            }
-            break;
         case CIRC_TYPE_WIRELESS:
-            if ((lenMsg = getLenMsgWirelessSens(cbuf))) {
-                copyGetDatafromBuf(cbuf, dist, lenMsg, CIRC_TYPE_WIRELESS);
-            } else {
-                // LOG_CBUF(LEVEL_ERROR, "CIRC_TYPE_WIRELESS\r\n");
-            }
-            break;
-            break;
         case CIRC_TYPE_PCKG_ENERGY:
         case CIRC_TYPE_PCKG_RSSI:
         case CIRC_TYPE_PCKG_TEMP:
@@ -132,59 +117,4 @@ u8 getLenMsgSimUart(CBufHandle cbuf) {
         }
     }
     return lenMsg;
-}
-
-u8 getLenMsgEnergyUart(CBufHandle cbuf) {
-    u16 lenMsg = 0;
-    u16 tail = cbuf->tail;
-    if (cbuf->numPckgInBuf > 1) {
-        while (tail != cbuf->head) {
-            if (cbuf->buf[tail] == CIRC_HEADER1 &&
-                cbuf->buf[(tail + 1) % cbuf->max] == CIRC_HEADER2) {
-                //				cbuf->buf[tail] = '\0';
-                //				cbuf->buf[(tail + 1) % cbuf->max] =
-                //'\0'; 				tail = (tail + 2) % cbuf->max; 				lenMsg = 2;
-                cbuf->tail = tail;
-                do {
-                    lenMsg++;
-                    if (tail == cbuf->head) {
-                        lenMsg = 0;
-                        cBufReset(cbuf);
-                        LOG_CBUF(LEVEL_ERROR, "NOHEADER\r\n");
-                    }
-                    tail = (tail + 1) % cbuf->max;
-
-                } while (!(cbuf->buf[tail] == CIRC_HEADER1 &&
-                           cbuf->buf[(tail + 1) % cbuf->max] == CIRC_HEADER2) &&
-                         lenMsg);
-                break;
-            }
-            cbuf->writeAvailable++;
-            cbuf->readAvailable--;
-            cbuf->buf[tail] = '\0';
-            tail = (tail + 1) % cbuf->max;
-        }
-        // printf("WRITEAV: %d   READAVAIL: %d\r\n", cbuf->writeAvailable,
-        // cbuf->readAvailable);
-    }
-
-    return lenMsg;
-}
-
-u16 getLenMsgWirelessSens(CircularBuffer* cbuf) {
-    u16 tail = cbuf->tail;
-    u16 lenData, lenFull;
-
-    lenData = cbuf->buf[(tail + 3) % cbuf->max] << 8 | cbuf->buf[(tail + 2) % cbuf->max];
-    lenFull = lenData + 6;
-
-    if (tail == 195) {
-        tail = cbuf->tail;
-    }
-
-    if (lenData == 0 || (cbuf->buf[(tail + lenFull - 1) % cbuf->max] == 0 &&
-                         cbuf->buf[(tail + lenFull - 2) % cbuf->max] == 0)) {
-        return 0;
-    }
-    return lenFull;
 }

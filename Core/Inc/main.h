@@ -150,19 +150,14 @@ void Error_Handler(void);
 #define URL_NIAC_TCP_ADDR (char*)"gis.ru.net"
 #define URL_NIAC_TCP_PORT 9878
 
-#define BKTE_SZ_UART_MSG 132
-#define BKTE_SZ_TEMP_MSG 4
+#define SZ_CMD_ENERGY    12
+#define SZ_CMD_VOLTAMPER 8
+#define SZ_CMD_TEMP      8
+#define SZ_CMD_TELEMETRY 10
 
-#define SZ_CMD_ENERGY              12
-#define SZ_CMD_VOLTAMPER           8
-#define SZ_CMD_TEMP                8
-#define SZ_CMD_TELEMETRY           10
-#define SZ_CMD_TELEMETRY_PHONE_NUM 14
-
-#define SZ_PAGE                  255
-#define SZ_BUF_ENERGY_FROM_UART1 500
-#define AMOUNT_MAX_PAGES         4
-#define SZ_PAGES                 1275  // SZ_PAGE * AMOUNT_MAX_PAGES
+#define SZ_PAGE          255
+#define AMOUNT_MAX_PAGES 4
+#define SZ_PAGES         1275  // SZ_PAGE * AMOUNT_MAX_PAGES
 
 #define BKTE_PREAMBLE     0xABCD
 #define BKTE_PREAMBLE_LSB 0xAB
@@ -189,15 +184,6 @@ typedef union {
     };
     u8 regIrq;
 } IrqFlags;
-
-typedef struct {
-    u8 hour;
-    u8 min;
-    u8 sec;
-    u8 year;
-    u8 month;
-    u8 day;
-} DateTime;
 
 typedef struct {
     char* ourTcpAddr;

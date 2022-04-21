@@ -12,7 +12,6 @@
 #define DEBUG_LEVEL_CBUF   LEVEL_ERROR
 #define DEBUG_LEVEL_FLASH  LEVEL_MAIN
 #define DEBUG_LEVEL_WEB    LEVEL_INFO
-#define DEBUG_LEVEL_TEMP   LEVEL_INFO
 #define DEBUG_LEVEL_SD     LEVEL_INFO
 #define DEBUG_LEVEL_GPS    LEVEL_INFO
 #define DEBUG_LEVEL_PWR    LEVEL_INFO
@@ -58,7 +57,6 @@
 #define LOG_CBUF(level, ...)  LOGG("CBUF :", DEBUG_LEVEL_CBUF, level, __VA_ARGS__)
 #define LOG_FLASH(level, ...) LOGG("FLASH:", DEBUG_LEVEL_FLASH, level, __VA_ARGS__)
 #define LOG_WEB(level, ...)   LOGG("WEB  :", DEBUG_LEVEL_WEB, level, __VA_ARGS__)
-#define LOG_TEMP(level, ...)  LOGG("TEMP :", DEBUG_LEVEL_TEMP, level, __VA_ARGS__)
 #define LOG_SD(level, ...)    LOGG("SD   :", DEBUG_LEVEL_SD, level, __VA_ARGS__)
 #define LOG_PWR(level, ...)   LOGG("PWR  :", DEBUG_LEVEL_PWR, level, __VA_ARGS__)
 
@@ -71,7 +69,6 @@
 #define LOG_CBUF(level, ...)
 #define LOG_FLASH(level, ...)
 #define LOG_WEB(level, ...)
-#define LOG_TEMP(level, ...)
 #define LOG_SD(level, ...)
 #define LOG_PWR(level, ...)
 

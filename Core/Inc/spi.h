@@ -34,18 +34,17 @@ extern "C" {
 extern SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN Private defines */
-#define SPI1_LORA_CS_SEL()      HAL_GPIO_WritePin(SPI1_CS_LORA_GPIO_Port, SPI1_CS_LORA_Pin, GPIO_PIN_RESET)
-#define SPI1_LORA_CS_DESEL()    HAL_GPIO_WritePin(SPI1_CS_LORA_GPIO_Port, SPI1_CS_LORA_Pin, GPIO_PIN_SET)
+#define SPI1_LORA_CS_SEL()   HAL_GPIO_WritePin(SPI1_CS_LORA_GPIO_Port, SPI1_CS_LORA_Pin, GPIO_PIN_RESET)
+#define SPI1_LORA_CS_DESEL() HAL_GPIO_WritePin(SPI1_CS_LORA_GPIO_Port, SPI1_CS_LORA_Pin, GPIO_PIN_SET)
 
-typedef SPI_HandleTypeDef*	PtrHSpi;
-typedef struct{
-	IrqFlags irqFlags;
-//	u8	rxBuffer[UART_SZ_RX_RESPONSE];
-	PtrHSpi pHSpi;
-}SPIInfo;
+typedef SPI_HandleTypeDef* PtrHSpi;
+typedef struct {
+    IrqFlags irqFlags;
+    //	u8	rxBuffer[UART_SZ_RX_RESPONSE];
+    PtrHSpi pHSpi;
+} SPIInfo;
 
 extern SPIInfo spiMemInfo;
-extern SPIInfo spiLoraInfo;
 /* USER CODE END Private defines */
 
 void MX_SPI2_Init(void);

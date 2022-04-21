@@ -1190,9 +1190,6 @@
         <group>
             <name>Drivers</name>
             <file>
-                <name>$PROJ_DIR$\..\Core\Drivers\Src\ds2482.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\Core\Drivers\Src\simcom.c</name>
             </file>
             <file>
@@ -1285,13 +1282,10 @@
                     <name>$PROJ_DIR$\..\Core\Tasks\Src\task_create_webpckg.c</name>
                 </file>
                 <file>
-                    <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_energy.c</name>
+                    <name>$PROJ_DIR$\..\Core\Tasks\Src\task_curr_measure.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_new_bin.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\Core\Tasks\Src\task_get_temp.c</name>
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Tasks\Src\task_iwdg.c</name>
@@ -1301,9 +1295,6 @@
                 </file>
                 <file>
                     <name>$PROJ_DIR$\..\Core\Tasks\Src\task_web_excahnge.c</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\..\Core\Tasks\Src\task_wireless_sens.c</name>
                 </file>
             </group>
             <group>

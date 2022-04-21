@@ -11,22 +11,17 @@
 #include "utils_flash.h"
 #include "utils_pckgs_manager.h"
 #include "utils_sd.h"
-GPIO_TypeDef* oneWirePorts[BKTE_MAX_CNT_1WIRE] = {
-    ONEWIRE_1_EN_GPIO_Port, ONEWIRE_2_EN_GPIO_Port, ONEWIRE_3_EN_GPIO_Port,
-    ONEWIRE_4_EN_GPIO_Port};
-u16 oneWirePins[BKTE_MAX_CNT_1WIRE] = {ONEWIRE_1_EN_Pin, ONEWIRE_2_EN_Pin, ONEWIRE_3_EN_Pin, ONEWIRE_4_EN_Pin};
 
 extern UART_HandleTypeDef huart3;
 extern RTC_HandleTypeDef  hrtc;
 extern osMutexId          mutexRTCHandle;
-extern osMutexId          mutexWriteToEnergyBufHandle;
+extern osMutexId          mutexBigBufHandle;
 extern osMutexId          mutexWebHandle;
 extern osMutexId          mutexSpiFlashHandle;
 extern osThreadId         getNewBinHandle;
 extern osSemaphoreId      semCreateWebPckgHandle;
 static RTC_TimeTypeDef    tmpTime;
 static RTC_DateTypeDef    tmpDate;
-extern u8                 SZ_PCKGENERGY;
 
 void bkteInit() {
     HAL_GPIO_WritePin(SD_PWR_EN_GPIO_Port, SD_PWR_EN_Pin, GPIO_PIN_RESET);
@@ -164,36 +159,6 @@ void getNumFirmware() {
     }
 }
 
-void fillPckgVoltAmper(PckgVoltAmper* pckg, u16* data) {
-    pckg->unixTimeStamp = getUnixTimeStamp();
-    pckg->amper = data[BKTE_NUM_CURRENT + 1] << 8 | data[BKTE_NUM_CURRENT];
-    pckg->volt = data[BKTE_NUM_VOLT + 1] << 8 | data[BKTE_NUM_VOLT];
-
-    if (pckg->volt >= 0xFF00) pckg->volt = 0;
-}
-
-void fillPckgEnergy(PckgEnergy* pckg, u16* data) {
-    pckg->unixTimeStamp = getUnixTimeStamp();
-
-    pckg->enAct = data[BKTE_NUM_ACT_ENERGY + 3] << 24 |
-                  data[BKTE_NUM_ACT_ENERGY + 2] << 16 |
-                  data[BKTE_NUM_ACT_ENERGY + 1] << 8 |
-                  data[BKTE_NUM_ACT_ENERGY];
-
-    pckg->enReact = data[BKTE_NUM_REACT_ENERGY + 3] << 24 |
-                    data[BKTE_NUM_REACT_ENERGY + 2] << 16 |
-                    data[BKTE_NUM_REACT_ENERGY + 1] << 8 |
-                    data[BKTE_NUM_REACT_ENERGY];
-
-    if (pckg->enAct >= 0xA0000000) pckg->enAct = 0;
-    if (pckg->enReact >= 0xA0000000) pckg->enReact = 0;
-}
-
-void fillPckgTemp(PckgTemp* pckg, s8* data) {
-    pckg->unixTimeStamp = getUnixTimeStamp();
-    memcpy(pckg->temp, data, 4);
-}
-
 u8 isCrcOk(char* pData, int len) {
     u32 crcCalc = crc32_byte(pData, len);
     u32 crcRecv = pData[len] << 24 | pData[len + 1] << 16 | pData[len + 2] << 8 | pData[len + 3];
@@ -205,16 +170,6 @@ u8 isCrcOk(char* pData, int len) {
     }
 
     return crcCalc == crcRecv;
-}
-
-void setTempLine(u8 numLine) {
-    HAL_GPIO_WritePin(oneWirePorts[numLine], oneWirePins[numLine],
-                      GPIO_PIN_SET);
-}
-
-void resetTempLine(u8 numLine) {
-    HAL_GPIO_WritePin(oneWirePorts[numLine], oneWirePins[numLine],
-                      GPIO_PIN_RESET);
 }
 
 void offAllLeds() {
@@ -248,14 +203,14 @@ void toggleRedLeds(){
 void updSpiFlash(CircularBuffer* cbuf) {
     u16 bufEnd[2] = {0, BKTE_PREAMBLE};
 
-    osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
+    osMutexWait(mutexBigBufHandle, osWaitForever);
 
     bufEnd[0] = calcCrc16(cbuf->buf, cbuf->readAvailable);
     cBufWriteToBuf(cbuf, (u8*)bufEnd, 4);
     spiFlashWriteNextPg(cbuf->buf, cbuf->readAvailable, 0);
     cBufReset(cbuf);
 
-    osMutexRelease(mutexWriteToEnergyBufHandle);
+    osMutexRelease(mutexBigBufHandle);
 
     LOG_FLASH(LEVEL_INFO, "updSpiFlash()\r\n");
 }
@@ -281,7 +236,7 @@ u8 waitGoodCsq(u32 timeout) {
 void saveData(u8* data, u8 sz, u8 cmdData, CircularBuffer* cbuf) {
     u16 bufEnd[2] = {0, BKTE_PREAMBLE};
 
-    osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
+    osMutexWait(mutexBigBufHandle, osWaitForever);
 
     if (cbuf->writeAvailable < sz + 2 + 4) {
         bufEnd[0] = calcCrc16(cbuf->buf, cbuf->readAvailable);
@@ -293,7 +248,7 @@ void saveData(u8* data, u8 sz, u8 cmdData, CircularBuffer* cbuf) {
     cBufWriteToBuf(cbuf, &cmdData, 1);
     cBufWriteToBuf(cbuf, data, sz);
 
-    osMutexRelease(mutexWriteToEnergyBufHandle);
+    osMutexRelease(mutexBigBufHandle);
 }
 
 u8 isDataFromFlashOk(char* pData, u8 len) {

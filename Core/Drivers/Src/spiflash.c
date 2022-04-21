@@ -283,14 +283,11 @@ void spiFlashSaveInfo() {
     memset(buf, 0, 32);
     memcpy(&buf[0], &spiFlash64.headNumPg, 4);
     memcpy(&buf[4], &spiFlash64.tailNumPg, 4);
-    memcpy(&buf[16], &bkte.lastData.enAct, 4);
-    memcpy(&buf[20], &bkte.lastData.enReact, 4);
     buf[31] = 0x01;
 
     spiFlashES(BKTE_SAVE_NUM_PAGE / SPIFLASH_NUM_PG_IN_SEC);
 
     LOG_FLASH(LEVEL_INFO, "Save pages: head %d, tail %d\r\n", spiFlash64.headNumPg, spiFlash64.tailNumPg);
-    LOG_FLASH(LEVEL_INFO, "Save energy: act %d, react %d\r\n", bkte.lastData.enAct, bkte.lastData.enReact);
 
     addr = (BKTE_SAVE_NUM_PAGE * spiFlash64.pgSz);
     spiFlashWrPg(buf, 32, addr);
@@ -305,12 +302,6 @@ void spiFlashLoadInfo(u8 *buf) {
 
     addr = (BKTE_SAVE_NUM_PAGE * spiFlash64.pgSz);
     spiFlashRdPg(buf, 256, addr);
-
-    bkte.lastData.enAct = buf[16] | buf[17] << 8 | buf[18] << 16 | buf[19] << 24;
-    bkte.lastData.enReact = buf[20] | buf[21] << 8 | buf[22] << 16 | buf[23] << 24;
-    if (bkte.lastData.enAct >= 0xA0000000) bkte.lastData.enAct = 0;
-    if (bkte.lastData.enReact >= 0xA0000000) bkte.lastData.enReact = 0;
-    LOG_FLASH(LEVEL_INFO, "Read energy: act %d, react %d\r\n", bkte.lastData.enAct, bkte.lastData.enReact);
 
     tmp = buf[0] | buf[1] << 8 | buf[2] << 16 | buf[3] << 24;
     spiFlash64.headNumPg = tmp;

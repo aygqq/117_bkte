@@ -50,18 +50,15 @@
 #include "utils_pckgs_manager.h"
 
 /* USER CODE END Variables */
-osThreadId getEnergyHandle;
+osThreadId getCurrentHandle;
 osThreadId getNewBinHandle;
 osThreadId keepAliveHandle;
 osThreadId webExchangeHandle;
-osThreadId getTempHandle;
 osThreadId manageIWDGHandle;
-osThreadId loraHandle;
 osThreadId createWebPckgHandle;
-osThreadId wirelessSensHandle;
 osMessageQId queueWebPckgHandle;
 osTimerId timerPowerOffHandle;
-osMutexId mutexWriteToEnergyBufHandle;
+osMutexId mutexBigBufHandle;
 osMutexId mutexWebHandle;
 osMutexId mutexRTCHandle;
 osMutexId mutexSDHandle;
@@ -69,21 +66,19 @@ osMutexId mutexSpiFlashHandle;
 osMutexId mutexSessionHandle;
 osSemaphoreId semCreateWebPckgHandle;
 osSemaphoreId semSendWebPckgHandle;
+osSemaphoreId semCurrMeasureHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
 /* USER CODE END FunctionPrototypes */
 
-void taskGetEnergy(void const * argument);
+void taskCurMeasure(void const * argument);
 void taskGetNewBin(void const * argument);
 void taskKeepAlive(void const * argument);
 void taskWebExchange(void const * argument);
-void taskGetTemp(void const * argument);
 void taskManageIWDG(void const * argument);
-void taskLora(void const * argument);
 void taskCreateWebPckg(void const * argument);
-void taskWirelessSens(void const * argument);
 void timerPowerOff_callback(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -128,9 +123,9 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE END Init */
   /* Create the mutex(es) */
-  /* definition and creation of mutexWriteToEnergyBuf */
-  osMutexDef(mutexWriteToEnergyBuf);
-  mutexWriteToEnergyBufHandle = osMutexCreate(osMutex(mutexWriteToEnergyBuf));
+  /* definition and creation of mutexBigBuf */
+  osMutexDef(mutexBigBuf);
+  mutexBigBufHandle = osMutexCreate(osMutex(mutexBigBuf));
 
   /* definition and creation of mutexWeb */
   osMutexDef(mutexWeb);
@@ -165,6 +160,10 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(semSendWebPckg);
   semSendWebPckgHandle = osSemaphoreCreate(osSemaphore(semSendWebPckg), 1);
 
+  /* definition and creation of semCurrMeasure */
+  osSemaphoreDef(semCurrMeasure);
+  semCurrMeasureHandle = osSemaphoreCreate(osSemaphore(semCurrMeasure), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
     /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -188,9 +187,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of getEnergy */
-  osThreadDef(getEnergy, taskGetEnergy, osPriorityNormal, 0, 300);
-  getEnergyHandle = osThreadCreate(osThread(getEnergy), NULL);
+  /* definition and creation of getCurrent */
+  osThreadDef(getCurrent, taskCurMeasure, osPriorityNormal, 0, 300);
+  getCurrentHandle = osThreadCreate(osThread(getCurrent), NULL);
 
   /* definition and creation of getNewBin */
   osThreadDef(getNewBin, taskGetNewBin, osPriorityNormal, 0, 300);
@@ -204,25 +203,13 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(webExchange, taskWebExchange, osPriorityNormal, 0, 300);
   webExchangeHandle = osThreadCreate(osThread(webExchange), NULL);
 
-  /* definition and creation of getTemp */
-  osThreadDef(getTemp, taskGetTemp, osPriorityNormal, 0, 300);
-  getTempHandle = osThreadCreate(osThread(getTemp), NULL);
-
   /* definition and creation of manageIWDG */
   osThreadDef(manageIWDG, taskManageIWDG, osPriorityNormal, 0, 128);
   manageIWDGHandle = osThreadCreate(osThread(manageIWDG), NULL);
 
-  /* definition and creation of lora */
-  osThreadDef(lora, taskLora, osPriorityNormal, 0, 256);
-  loraHandle = osThreadCreate(osThread(lora), NULL);
-
   /* definition and creation of createWebPckg */
   osThreadDef(createWebPckg, taskCreateWebPckg, osPriorityNormal, 0, 300);
   createWebPckgHandle = osThreadCreate(osThread(createWebPckg), NULL);
-
-  /* definition and creation of wirelessSens */
-  osThreadDef(wirelessSens, taskWirelessSens, osPriorityNormal, 0, 300);
-  wirelessSensHandle = osThreadCreate(osThread(wirelessSens), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
@@ -230,21 +217,22 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_taskGetEnergy */
+/* USER CODE BEGIN Header_taskCurMeasure */
 /**
- * @brief  Function implementing the getEnergy thread.
- * @param  argument: Not used
- * @retval None
- */
-/* USER CODE END Header_taskGetEnergy */
-__weak void taskGetEnergy(void const * argument)
+  * @brief  Function implementing the getCurrent thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_taskCurMeasure */
+__weak void taskCurMeasure(void const * argument)
 {
-  /* USER CODE BEGIN taskGetEnergy */
-    /* Infinite loop */
-    for (;;) {
-        osDelay(50);
-    }
-  /* USER CODE END taskGetEnergy */
+  /* USER CODE BEGIN taskCurMeasure */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END taskCurMeasure */
 }
 
 /* USER CODE BEGIN Header_taskGetNewBin */
@@ -298,23 +286,6 @@ __weak void taskWebExchange(void const * argument)
   /* USER CODE END taskWebExchange */
 }
 
-/* USER CODE BEGIN Header_taskGetTemp */
-/**
- * @brief Function implementing the getTemp thread.
- * @param argument: Not used
- * @retval None
- */
-/* USER CODE END Header_taskGetTemp */
-__weak void taskGetTemp(void const * argument)
-{
-  /* USER CODE BEGIN taskGetTemp */
-    /* Infinite loop */
-    for (;;) {
-        osDelay(1);
-    }
-  /* USER CODE END taskGetTemp */
-}
-
 /* USER CODE BEGIN Header_taskManageIWDG */
 /**
  * @brief Function implementing the manageIWDG thread.
@@ -332,24 +303,6 @@ __weak void taskManageIWDG(void const * argument)
   /* USER CODE END taskManageIWDG */
 }
 
-/* USER CODE BEGIN Header_taskLora */
-/**
- * @brief Function implementing the lora thread.
- * @param argument: Not used
- * @retval None
- */
-/* USER CODE END Header_taskLora */
-__weak void taskLora(void const * argument)
-{
-  /* USER CODE BEGIN taskLora */
-
-    /* Infinite loop */
-    for (;;) {
-        osDelay(1);
-    }
-  /* USER CODE END taskLora */
-}
-
 /* USER CODE BEGIN Header_taskCreateWebPckg */
 /**
  * @brief Function implementing the createWebPckg thread.
@@ -365,23 +318,6 @@ __weak void taskCreateWebPckg(void const * argument)
         osDelay(1);
     }
   /* USER CODE END taskCreateWebPckg */
-}
-
-/* USER CODE BEGIN Header_taskWirelessSens */
-/**
- * @brief Function implementing the wirelessSens thread.
- * @param argument: Not used
- * @retval None
- */
-/* USER CODE END Header_taskWirelessSens */
-__weak void taskWirelessSens(void const * argument)
-{
-  /* USER CODE BEGIN taskWirelessSens */
-    /* Infinite loop */
-    for (;;) {
-        osDelay(1);
-    }
-  /* USER CODE END taskWirelessSens */
 }
 
 /* timerPowerOff_callback function */

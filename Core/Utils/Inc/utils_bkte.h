@@ -11,7 +11,6 @@
 #include "FreeRTOS.h"
 #include "circularBuffer.h"
 #include "cmsis_os.h"
-#include "ds2482.h"
 #include "fatfs.h"
 #include "main.h"
 #include "simcom.h"
@@ -37,16 +36,6 @@
 #define BKTE_MAX_CNT_1WIRE       4
 #define LEN_TIMESTAMP            13
 
-#define BKTE_NUM_HEADER_55    11
-#define BKTE_NUM_HEADER_B9    22
-#define BKTE_NUM_CURRENT      12
-#define BKTE_NUM_VOLT         14
-#define BKTE_SZ_CURRENT       2
-#define BKTE_SZ_VOLT          2
-#define BKTE_NUM_ACT_ENERGY   16
-#define BKTE_SZ_ENERGY        4
-#define BKTE_NUM_REACT_ENERGY 27
-
 #define BKTE_ID_DEV_BKTE 0x10
 #define BKTE_ID_DEV_BKT  0x11
 #define BKTE_ID_DEV_BSG  0x12
@@ -61,20 +50,16 @@
 
 #define SZ_MAX_TX_DATA 4096
 
-#define BKTE_MAX_TEMP      100
-#define BKTE_MIN_TEMP      -100
-#define BKTE_NO_TEMP       -127
-#define BKTE_WIRELESS_TEMP 101
-
 #define BKTE_BAD_TIMESTAMP 2997993600
 
 #define BKTE_BIG_DIF_RTC_SERVTIME 600
 
 typedef struct {
-    u8 idBoot;
-    u8 idFirmware;
-    u8 idNewFirmware;
-    u8 szNewFirmware;
+    u64 header;
+    u8  idBoot;
+    u8  idFirmware;
+    u8  idNewFirmware;
+    u8  szNewFirmware;
 } fw_info_t;
 
 typedef struct {
@@ -110,19 +95,6 @@ typedef union {
 } ErrorFlags;
 
 typedef struct {
-    u8 canMeasure;
-    s8 curTemp;
-} TempLine;
-
-typedef struct {
-    u32 enAct;
-    u32 enReact;
-    s16 current;
-    u16 volt;
-    s8  temp[4];
-} LastData;
-
-typedef struct {
     u32   posFile;
     u32   lenLog;
     char* fNameLog;
@@ -143,20 +115,15 @@ typedef union {
         u8 isFatMount : 1;
         u8 isDS2482   : 1;
         u8 isSPIFlash : 1;
-        u8 isLoraOk   : 1;
     };
     u8 regHardWareStat;
 } HardWareStatus;
 
 typedef struct {
     u32 cr_web;
-    // u32 cr_web_err;
-    u32 enrg;
     u32 new_bin;
-    u32 temp;
     u32 alive;
     u32 web_exchng;
-    u32 wireless;
 
     u32 pageWrCount;
     u32 pageRdCount;
@@ -186,17 +153,12 @@ typedef struct {
     HardWareStatus hwStat;
     PWRInfo        pwrInfo;
     ErrorFlags     erFlags;
-    LastData       lastData;
 
     bkte_state_t state;
     bkte_info_t  info;
     time_stat_t  timers;
     statistics_t stat;
 } BKTE;
-
-typedef enum { NUM_FILE_ENERGY = 0,
-               NUM_FILE_TEMP,
-               NUM_FILE_RSSI } NUM_FILE;
 
 typedef enum {
     CMD_DATA_VOLTAMPER = 1,
@@ -294,21 +256,6 @@ typedef enum {
     CMD_REQUEST_PART_FIRMWARE
 } CMD_REQUEST;
 
-typedef enum { MSG_TEMP = 0xF000,
-               MSG_TELEMETRY = 0x0000 } TYPE_MSG;
-
-typedef struct {
-    u32 unixTimeStamp;
-    u32 enAct;
-    u32 enReact;
-} PckgEnergy;
-
-typedef struct {
-    u32 unixTimeStamp;
-    s16 amper;
-    u16 volt;
-} PckgVoltAmper;
-
 typedef struct {
     u32 unixTimeStamp;
     u32 data;
@@ -317,46 +264,30 @@ typedef struct {
 } PckgTelemetry;
 
 typedef struct {
-    u32 unixTimeStamp;
-    s8  temp[BKTE_MAX_CNT_1WIRE];
-} PckgTemp;
-
-typedef struct {
     u32 fromByte;
     u32 toByte;
 } PckgUpdFirmware;
 
 void bkteInit();
-void getMaxNumDS1820(BKTE* pBkte);
-void resetTempLine(u8 numLine);
-void setTempLine(u8 numLine);
-void fillPckgEnergy(PckgEnergy* pckg, u16* data);
-void fillPckgTemp(PckgTemp* pckg, s8* data);
 
-void fillPckgVoltAmper(PckgVoltAmper* pckg, u16* data);
-
-void setDateTime(DateTime* dt);
-void setTM(time_t* pTimeStamp, DateTime* dt);
-
-u8          getDeviation(LastData* pCurData, LastData* pLastData);
-u8          crc8(char* pcBlock, int len);
-u8          isCrcOk(char* pData, int len);
-void        offAllLeds();
-void        offAllRedLeds();
-void        toggleGreenLeds();
-void        toggleRedLeds();
 ErrorStatus getServerTime();
+u32         getUnixTimeStamp();
+void        setUnixTimeStamp(u32 timeStamp);
 
-u8 getGnssPckg(u8* pBuf, u16 szBuf, PckgEnergy* pPckgGnss, u8 szPckg);
-// void checkBufForWritingToFlash();
-void updSpiFlash(CircularBuffer* cbuf);
-u8   waitGoodCsq(u32 timeout);
+void offAllLeds();
+void offAllRedLeds();
+void toggleGreenLeds();
+void toggleRedLeds();
 
 void saveData(u8* data, u8 sz, u8 cmdData, CircularBuffer* cbuf);
-u32  getUnixTimeStamp();
-u8   isDataFromFlashOk(char* pData, u8 len);
+void updSpiFlash(CircularBuffer* cbuf);
 void copyTelemetry(u8* buf, PckgTelemetry* pckgTel);
 void saveTelemetry(PckgTelemetry* pckg, CircularBuffer* cbuf);
+
+u8 waitGoodCsq(u32 timeout);
+
+u8 isCrcOk(char* pData, int len);
+u8 isDataFromFlashOk(char* pData, u8 len);
 
 void getNumFirmware();
 

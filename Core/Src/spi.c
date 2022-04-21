@@ -154,32 +154,25 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 
 /* USER CODE BEGIN 1 */
 SPIInfo spiMemInfo;
-SPIInfo spiLoraInfo;
 
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi) {
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef* hspi) {
     if (hspi->Instance == SPI2) {
         spiMemInfo.irqFlags.isIrqRx = 1;
         //		printf("Irq: RxSpi\r\n");
-    } else if (hspi->Instance == SPI1) {
-        spiLoraInfo.irqFlags.isIrqRx = 1;
     }
 }
 
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi) {
     if (hspi->Instance == SPI2) {
         spiMemInfo.irqFlags.isIrqRx = 1;
         //		printf("Irq: TxRxSpi\r\n");
-    } else if (hspi->Instance == SPI1) {
-        spiLoraInfo.irqFlags.isIrqRx = 1;
     }
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi) {
     if (hspi->Instance == SPI2) {
         spiMemInfo.irqFlags.isIrqTx = 1;
         //		printf("Irq: TxSpi\r\n");
-    } else if (hspi->Instance == SPI1) {
-        spiLoraInfo.irqFlags.isIrqTx = 1;
     }
 }
 /* USER CODE END 1 */

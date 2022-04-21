@@ -7,11 +7,9 @@
 extern u16 iwdgTaskReg;
 
 extern osThreadId    keepAliveHandle;
-extern osThreadId    getTempHandle;
-extern osThreadId    getEnergyHandle;
-extern osThreadId    wirelessSensHandle;
+extern osThreadId    getCurrentHandle;
 extern osTimerId     timerPowerOffHandle;
-extern osMutexId     mutexWriteToEnergyBufHandle;
+extern osMutexId     mutexBigBufHandle;
 extern osMutexId     mutexWebHandle;
 extern osMutexId     mutexRTCHandle;
 extern osMutexId     mutexSDHandle;
@@ -89,17 +87,15 @@ void pwrOffBkte() {
     u32  curTime = 0;
     u8   cnt;
 
-    osMutexWait(mutexWriteToEnergyBufHandle, osWaitForever);
+    osMutexWait(mutexBigBufHandle, osWaitForever);
     osMutexWait(mutexRTCHandle, osWaitForever);
     osMutexWait(mutexSpiFlashHandle, osWaitForever);
     osMutexWait(mutexSDHandle, osWaitForever);
     osMutexWait(mutexWebHandle, osWaitForever);
 
-    vTaskSuspend(getEnergyHandle);
-    vTaskSuspend(getTempHandle);
-    vTaskSuspend(wirelessSensHandle);
+    vTaskSuspend(getCurrentHandle);
 
-    osMutexRelease(mutexWriteToEnergyBufHandle);
+    osMutexRelease(mutexBigBufHandle);
     osMutexRelease(mutexRTCHandle);
     osMutexRelease(mutexSpiFlashHandle);
     osMutexRelease(mutexSDHandle);
@@ -107,7 +103,6 @@ void pwrOffBkte() {
 
     osDelay(2000);
     LOG_PWR(LEVEL_INFO, "PWR OFF START\r\n");
-    // cBufReset(&circBufPckgEnergy);
 
     bkte.pwrInfo.adcVoltBat = getAdcVoltBat();
     generateMsgBat();
@@ -190,7 +185,6 @@ void pwrOffBkte() {
 
 void updRTC() {
     getServerTime();
-    // fillTelemetry(&curPckgEnergy, TEL_CHANGE_TIME, time);
 }
 
 void generateMsgKeepAlive() {
@@ -297,23 +291,14 @@ ErrorStatus sendMsgTaskStat() {
     pckgTel.code = TEL_CD_TASK_CR_WEB;
     pckgTel.data = bkte.stat.cr_web;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = TEL_CD_TASK_ENERGY;
-    pckgTel.data = bkte.stat.enrg;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
     pckgTel.code = TEL_CD_TASK_NEW_BIN;
     pckgTel.data = bkte.stat.new_bin;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = TEL_CD_TASK_TEMP;
-    pckgTel.data = bkte.stat.temp;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
     pckgTel.code = TEL_CD_TASK_ALIVE;
     pckgTel.data = bkte.stat.alive;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
     pckgTel.code = TEL_CD_TASK_WEB_EXCHANGE;
     pckgTel.data = bkte.stat.web_exchng;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-    pckgTel.code = TEL_CD_TASK_WIRELESS;
-    pckgTel.data = bkte.stat.wireless;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
     // pckgTel.group = TEL_GR_HARDWARE_STATUS;
@@ -508,22 +493,10 @@ ErrorStatus sendInitTelemetry() {
     pckgTel.data = bkte.hwStat.isSPIFlash;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    pckgTel.code = TEL_CD_HW_LORA;
-    pckgTel.data = bkte.hwStat.isLoraOk;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-
     pckgTel.code = TEL_CD_HW_UPDATE_ERR;
     tmp = getFlashData(FLASH_ADDR_ERR_NEW_FIRMWARE);
     if (tmp > 2) tmp = 0;
     pckgTel.data = tmp;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-
-    pckgTel.code = (u8)12;
-    pckgTel.data = bkte.lastData.enAct;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-
-    pckgTel.code = (u8)13;
-    pckgTel.data = bkte.lastData.enReact;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
     pckgTel.group = TEL_GR_HARDWARE_STATUS;

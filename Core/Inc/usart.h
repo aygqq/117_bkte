@@ -46,47 +46,31 @@ void MX_USART3_UART_Init(void);
 void MX_USART6_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-#define UART_TIMEOUT		3000
-#define UART_SZ_RX_RESPONSE			1500
-#define SZ_RX_UART1			66
+#define UART_TIMEOUT        3000
+#define UART_SZ_RX_RESPONSE 1500
 
-#define USART_SZ_BUF_RX_USART6    7100
-#define USART_SZ_BUF_TX_USART6    1024
+#define USART_SZ_BUF_RX_USART6 7100
+#define USART_SZ_BUF_TX_USART6 1024
 
-#define USART_SZ_BUF_TX_USART2    20
-#define USART_SZ_BUF_RX_USART2    240
+#define USART_TIMEOUT 15000
 
-#define USART_TIMEOUT             15000
-
-#define USART_RE2_WRITE_EN()  HAL_GPIO_WritePin(USART2_RE_GPIO_Port, USART2_RE_Pin, GPIO_PIN_SET)
-#define USART_RE2_READ_EN()  HAL_GPIO_WritePin(USART2_RE_GPIO_Port, USART2_RE_Pin, GPIO_PIN_RESET)
-
-typedef UART_HandleTypeDef*	PHuart;
-typedef struct{
-	IrqFlags irqFlags;
-	u8*	pRxBuf;
-  u8* pTxBuf;
-  u16 szRxBuf;
-  u16 szTxBuf;
-  PHuart pHuart;
-}UartInfo;
+typedef UART_HandleTypeDef *PHuart;
+typedef struct {
+    IrqFlags irqFlags;
+    u8      *pRxBuf;
+    u8      *pTxBuf;
+    u16      szRxBuf;
+    u16      szTxBuf;
+    PHuart   pHuart;
+} UartInfo;
 
 extern UartInfo uInfoSim;
-extern UartInfo uInfoWirelessSens;
 
-void setBaudRateUart(UART_HandleTypeDef *huart, u32 baudrate);
-//void rxUartSIM_IT();
-void uartTx(char* data, u16 sz, UartInfo* pUInf);
-//void txUartGNSS(char* data, u16 sz);
-void clearRx(UART_HandleTypeDef *huart);
-//void rxUart1_IT();
-
-void rxUart(UartInfo* pUInf);
-void rxUart1_IT();
-void uartRxDma(UartInfo* pUInf);
 void uartInitInfo();
-
-void uartTxLCD(char* data, u16 sz, UartInfo* pUInf);
+void uartRxDma(UartInfo *pUInf);
+void uartClearInfo(UartInfo *pUinf);
+void uartRxDmaReset(UartInfo *pUInf);
+void uartTx(char *data, u16 sz, UartInfo *pUInf);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
