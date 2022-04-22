@@ -22,6 +22,8 @@ typedef struct {
     u16 min;
     u16 max;
 
+    float coef;  // calibration current coefficient
+
     u16 arr_max[100];
     u16 arr_min[100];
     u16 ptr_max;

@@ -170,7 +170,8 @@ typedef enum {
     CMD_DATA_ENERGY_127,
     CMD_DATA_PERCRSSI_127,
     CMD_DATA_DOORS,
-    CMD_DATA_GEO_PLUS
+    CMD_DATA_GEO_PLUS,
+    CMD_DATA_ADC_CURR = 0x30
 } CMD_DATA_TYPE;
 
 typedef enum {
@@ -256,22 +257,22 @@ typedef enum {
     CMD_REQUEST_PART_FIRMWARE
 } CMD_REQUEST;
 
-typedef struct {
+typedef __packed struct {
     u32 unixTimeStamp;
     u32 data;
     u8  group;
     u8  code;
 } PckgTelemetry;
 
-typedef struct {
+typedef __packed struct {
     u32 unixTimeStamp;
     u16 min[3];
     u16 max[3];
     u16 avg[3];
     u16 first_max[3];
-} PckgCurrent;
+} PckgAdcCurr;
 
-typedef struct {
+typedef __packed struct {
     u32 fromByte;
     u32 toByte;
 } PckgUpdFirmware;

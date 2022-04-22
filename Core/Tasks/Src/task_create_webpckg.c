@@ -16,11 +16,9 @@ extern osSemaphoreId semSendWebPckgHandle;
 
 static char tmpBufPage[256];
 
-static Page     pgEnergy = {.type = CMD_DATA_ENERGY, .szType = SZ_CMD_ENERGY};
-static Page     pgTemp = {.type = CMD_DATA_TEMP, .szType = SZ_CMD_TEMP};
-static Page     pgVoltAmper = {.type = CMD_DATA_VOLTAMPER, .szType = SZ_CMD_VOLTAMPER};
+static Page     pgAdcCurr = {.type = CMD_DATA_ADC_CURR, .szType = SZ_CMD_ADC_CURR};
 static Page     pgTelemetry = {.type = CMD_DATA_TELEMETRY, .szType = SZ_CMD_TELEMETRY};
-static Page    *allPages[] = {&pgVoltAmper, &pgEnergy, &pgTemp, &pgTelemetry};
+static Page    *allPages[] = {&pgAdcCurr, &pgTelemetry};
 static WebPckg *curPckg;
 
 void taskCreateWebPckg(void const *argument) {
@@ -41,15 +39,8 @@ void taskCreateWebPckg(void const *argument) {
         flush = 0;
         delayPages = getDelayPages();
         if (osSemaphoreWait(semCreateWebPckgHandle, 2000) == osOK) {
-            // generateTestPackage();
-            // delayPages = getDelayPages();
             flush = 1;
             LOG_WEB(LEVEL_INFO, "FLUSH, pages: %d\r\n", delayPages);
-            // if (circBufAllPckgs.readAvailable > 0) {
-            //     flush = 1;
-            //     // updSpiFlash(&circBufAllPckgs);
-            //     LOG_WEB(LEVEL_INFO, "FLUSH STARTED\r\n");
-            // }
         }
         while (flush == 1 || delayPages > 3) {
             if (delayPages == 0) {
@@ -109,7 +100,7 @@ void taskCreateWebPckg(void const *argument) {
 }
 
 void clearAllPages() {
-    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
+    for (u8 i = 0; i < CNT_PAGES; i++) {
         clearPage(allPages[i]);
     }
 }
@@ -118,20 +109,12 @@ void parseData(u8 *tmpBufPage, u8 len) {
     u8 i = 0;
     while (i < len) {
         switch (tmpBufPage[i]) {
-            case CMD_DATA_ENERGY:
-                addToPage(&pgEnergy, &tmpBufPage[i + 1], SZ_CMD_ENERGY);
-                i += (SZ_CMD_ENERGY + 1);
-                break;
-            case CMD_DATA_VOLTAMPER:
-                addToPage(&pgVoltAmper, &tmpBufPage[i + 1], SZ_CMD_VOLTAMPER);
-                i += (SZ_CMD_VOLTAMPER + 1);
-                break;
-            case CMD_DATA_TEMP:
-                addToPage(&pgTemp, &tmpBufPage[i + 1], SZ_CMD_TEMP);
-                i += (SZ_CMD_TEMP + 1);
-                break;
             case CMD_DATA_TELEMETRY:
                 addToPage(&pgTelemetry, &tmpBufPage[i + 1], SZ_CMD_TELEMETRY);
+                i += (SZ_CMD_TELEMETRY + 1);
+                break;
+            case CMD_DATA_ADC_CURR:
+                addToPage(&pgAdcCurr, &tmpBufPage[i + 1], SZ_CMD_ADC_CURR);
                 i += (SZ_CMD_TELEMETRY + 1);
                 break;
             default:
@@ -151,7 +134,7 @@ void clearPage(Page *pg) {
 
 u16 getSzAllPages() {
     u16 sz = 0;
-    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
+    for (u8 i = 0; i < CNT_PAGES; i++) {
         if (allPages[i]->iter) {
             sz += (allPages[i]->iter + 1 + 1);  // sz + sizeof(type) + szeof(cnt)
         }
@@ -165,7 +148,7 @@ void addToPage(Page *pg, u8 *src, u8 sz) {
 }
 
 void addPagesToWebPckg(WebPckg *pckg) {
-    for (u8 i = 0; i < AMOUNT_MAX_PAGES; i++) {
+    for (u8 i = 0; i < CNT_PAGES; i++) {
         if (allPages[i]->iter) {
             addInfoToWebPckg(pckg, allPages[i]->buf, allPages[i]->iter, allPages[i]->iter / allPages[i]->szType, allPages[i]->type);
         }

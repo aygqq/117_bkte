@@ -23,6 +23,7 @@ adc_measure_t meas;
 
 void calcBasicParams(adc_measure_t *meas);
 void searchAllMinMax(adc_measure_t *meas);
+void saveMeasureData(adc_measure_t *meas);
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
     if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
@@ -45,8 +46,8 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
 void taskCurMeasure(void const *argument) {
     // vTaskSuspend(getCurrentHandle);
 
-    // spiFlashInit(circBufAllPckgs.buf);
-    // cBufReset(&circBufAllPckgs);
+    spiFlashInit(circBufAllPckgs.buf);
+    cBufReset(&circBufAllPckgs);
     // sdInit();
     // simInit();
     // while (getServerTime() != SUCCESS) {};
@@ -70,6 +71,7 @@ void taskCurMeasure(void const *argument) {
 
         calcBasicParams(&meas);
         searchAllMinMax(&meas);
+        saveMeasureData(&meas);
 
         iwdgTaskReg |= IWDG_TASK_CURR_MEASURE;
     }
@@ -108,14 +110,12 @@ void searchAllMinMax(adc_measure_t *meas) {
     u16         idx_max, idx_min;
     u16         from, to;
     adc_chan_t *chan;
-    u16         cnt = 0;
 
     for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
         chan = &meas->chan[ch];
         chan->ptr_max = 0;
         chan->ptr_min = 0;
         for (u16 i = 0; i < meas->size - WINDOW_SIZE; i += WINDOW_STEP) {
-            cnt++;
             min = ADC_MAX_VAL;
             max = ADC_MIN_VAL;
             for (u16 k = i; k < i + WINDOW_SIZE; k++) {
@@ -141,12 +141,28 @@ void searchAllMinMax(adc_measure_t *meas) {
             }
         }
         // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\r\n", chan->ptr_max, chan->ptr_min, chan->arr_max[1], chan->arr_max[2], chan->arr_min[1], chan->arr_min[2], cnt);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\r\n", chan->ptr_max, chan->ptr_min, chan->arr_max[1], chan->arr_max[2], chan->arr_min[1], chan->arr_min[2]);
         // for (u16 i = 0; i < ptr_max; i++) {
         //     printf("%d\r\n", arr_max[i]);
         // }
         // printf("\r\n");
     }
+}
+
+void saveMeasureData(adc_measure_t *meas) {
+    PckgAdcCurr pckgAdc;
+
+    for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
+        pckgAdc.min[ch] = (u16)(meas->chan[ch].min * meas->chan[ch].coef);
+        pckgAdc.max[ch] = (u16)(meas->chan[ch].max * meas->chan[ch].coef);
+        pckgAdc.avg[ch] = (u16)(meas->chan[ch].avg * meas->chan[ch].coef);
+        if (meas->chan[ch].ptr_max > 0) {
+            pckgAdc.first_max[ch] = (meas->chan[ch].arr_max[1] - ch) / 4;
+        } else {
+            pckgAdc.first_max[ch] = 0;
+        }
+    }
+    saveData((u8 *)&pckgAdc, SZ_CMD_ADC_CURR, CMD_DATA_ADC_CURR, &circBufAllPckgs);
 }
 
 void unLockTasks() {

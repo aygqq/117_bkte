@@ -154,9 +154,11 @@ void Error_Handler(void);
 #define SZ_CMD_VOLTAMPER 8
 #define SZ_CMD_TEMP      8
 #define SZ_CMD_TELEMETRY 10
+#define SZ_CMD_ADC_CURR  28
 
 #define SZ_PAGE          255
-#define AMOUNT_MAX_PAGES 4
+#define CNT_PAGES        2
+#define AMOUNT_MAX_PAGES 5
 #define SZ_PAGES         1275  // SZ_PAGE * AMOUNT_MAX_PAGES
 
 #define BKTE_PREAMBLE     0xABCD

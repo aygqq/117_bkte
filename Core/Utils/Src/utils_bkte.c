@@ -7,6 +7,7 @@
 
 #include "utils_bkte.h"
 
+#include "spiflash.h"
 #include "utils_crc.h"
 #include "utils_flash.h"
 #include "utils_pckgs_manager.h"
