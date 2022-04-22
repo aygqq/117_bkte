@@ -12,58 +12,38 @@ extern osThreadId    keepAliveHandle;
 extern osThreadId    createWebPckgHandle;
 extern osThreadId    getNewBinHandle;
 extern osSemaphoreId semCreateWebPckgHandle;
+extern osSemaphoreId semCurrMeasureHandle;
 extern osMutexId     mutexBigBufHandle;
 
 extern CircularBuffer circBufAllPckgs;
 
-volatile uint16_t adc[8000] = {0};
-int               cnt = 0;
+volatile u16 buf_adc[8000] = {0};
+volatile u8  flag_adc = 0;
+
+void searchExtremums(adc_measure_t *meas);
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-    u32 sum = 0;
-    u16 max = 0;
-    u16 min = 4096;
     if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
     {
-        for (int i = 1000; i < 2000; i++) {
-            sum += adc[4 * i + 1];
-            if (adc[4 * i + 1] > max) max = adc[4 * i + 1];
-            if (adc[4 * i + 1] < min) min = adc[4 * i + 1];
-            // printf("%d\t%d\n", (cnt * 1000 + i), adc[4 * i + 1]);
-        }
-        LOG(LEVEL_INFO, "2 %d\t%d\t%d\r\n", sum / 1000, min, max);
-        bkte.pwrInfo.adcVoltBat = (u16)(adc[0] * 3.3 * 2 / 4096 * 100);
-        cnt++;
+        flag_adc = 2;
+        osSemaphoreRelease(semCurrMeasureHandle);
     }
 }
 
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
-    u32 sum = 0;
-    u16 max = 0;
-    u16 min = 4096;
     if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
     {
-        for (int i = 0; i < 1000; i++) {
-            sum += adc[4 * i + 1];
-            if (adc[4 * i + 1] > max) max = adc[4 * i + 1];
-            if (adc[4 * i + 1] < min) min = adc[4 * i + 1];
-            // printf("%d\t%d\n", (cnt * 1000 + i), adc[4 * i + 1]);
-        }
-        LOG(LEVEL_INFO, "1 %d\t%d\t%d\r\n", sum / 1000, min, max);
-        bkte.pwrInfo.adcVoltBat = (u16)(adc[0] * 3.3 * 2 / 4096 * 100);
-        cnt++;
+        flag_adc = 1;
+        osSemaphoreRelease(semCurrMeasureHandle);
     }
 }
 
 // u8 test = 0;
 
 void taskCurMeasure(void const *argument) {
+    u32           cnt = 0;
+    adc_measure_t meas;
     // vTaskSuspend(getCurrentHandle);
-    u8  numIteration = 0;
-    u16 retLen;
-
-    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&adc, 8000);
-    HAL_TIM_Base_Start(&htim2);
 
     // spiFlashInit(circBufAllPckgs.buf);
     // cBufReset(&circBufAllPckgs);
@@ -74,10 +54,76 @@ void taskCurMeasure(void const *argument) {
     // sendInitTelemetry();
     // unLockTasks();
 
+    osSemaphoreWait(semCurrMeasureHandle, 0);
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&buf_adc, 8000);
+    HAL_TIM_Base_Start(&htim2);
+
+    meas.size = 1000;
+
     for (;;) {
-        osDelay(400);
+        if (osSemaphoreWait(semCurrMeasureHandle, 2000) != osOK) {
+            LOG(LEVEL_ERROR, "No ADC semaphore\r\n");
+            continue;
+        }
+        meas.sum = 0;
+        meas.min = 4096;
+        meas.max = 0;
+        if (flag_adc == 1) {
+            meas.p_buf = (u16 *)&buf_adc[0];
+        } else if (flag_adc == 2) {
+            meas.p_buf = (u16 *)&buf_adc[meas.size];
+        }
+        for (u16 i = 0; i < meas.size; i++) {
+            meas.sum += meas.p_buf[4 * i + 1];
+            if (meas.p_buf[4 * i + 1] > meas.max) meas.max = meas.p_buf[4 * i + 1];
+            if (meas.p_buf[4 * i + 1] < meas.min) meas.min = meas.p_buf[4 * i + 1];
+            // printf("%d\t%d\n", (cnt * meas.size + i), meas.p_buf[4 * i + 1]);
+        }
+        meas.avg = meas.sum / meas.size;
+        // LOG(LEVEL_INFO, "1 %d\t%d\t%d\r\n", meas.sum / meas.size, meas.min, meas.max);
+        bkte.pwrInfo.adcVoltBat = (u16)(meas.p_buf[0] * 3.3 * 2 / 4096 * 100);
+        cnt++;
+        // HAL_ADC_Stop_DMA(&hadc1);
+        searchExtremums(&meas);
+
         iwdgTaskReg |= IWDG_TASK_CURR_MEASURE;
     }
+}
+
+void searchExtremums(adc_measure_t *meas) {
+    u16 max, min;
+    u16 idx_max, idx_min;
+
+    meas->ptr_max = 0;
+    meas->ptr_min = 0;
+    for (u16 i = 0; i < meas->size - 10; i = i + 5) {
+        min = 4096;
+        max = 0;
+        for (u16 k = 4 * i; k < 4 * (i + 10); k += 4) {
+            if (meas->p_buf[k + 1] > max) {
+                max = meas->p_buf[k + 1];
+                idx_max = k + 1;
+            }
+            if (meas->p_buf[k + 1] < min) {
+                min = meas->p_buf[k + 1];
+                idx_min = k + 1;
+            }
+        }
+        if (max > (meas->avg + 100) && idx_max > 4 * (i + 2) && idx_max < 4 * (i + 8) && meas->arr_max[meas->ptr_max] != idx_max) {
+            meas->ptr_max++;
+            meas->arr_max[meas->ptr_max] = idx_max;
+        }
+        if (min < (meas->avg - 100) && idx_min > 4 * (i + 2) && idx_min < 4 * (i + 8) && meas->arr_min[meas->ptr_min] != idx_min) {
+            meas->ptr_min++;
+            meas->arr_min[meas->ptr_min] = idx_min;
+        }
+    }
+    // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);
+    printf("%d\t%d\t%d\t%d\t%d\t%d\r\n", meas->ptr_max, meas->ptr_min, meas->arr_max[1], meas->arr_max[2], meas->arr_min[1], meas->arr_min[2]);
+    // for (u16 i = 0; i < ptr_max; i++) {
+    //     printf("%d\r\n", arr_max[i]);
+    // }
+    // printf("\r\n");
 }
 
 void unLockTasks() {
