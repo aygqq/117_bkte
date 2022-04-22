@@ -264,6 +264,14 @@ typedef struct {
 } PckgTelemetry;
 
 typedef struct {
+    u32 unixTimeStamp;
+    u16 min[3];
+    u16 max[3];
+    u16 avg[3];
+    u16 first_max[3];
+} PckgCurrent;
+
+typedef struct {
     u32 fromByte;
     u32 toByte;
 } PckgUpdFirmware;

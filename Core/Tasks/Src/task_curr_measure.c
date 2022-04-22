@@ -17,10 +17,12 @@ extern osMutexId     mutexBigBufHandle;
 
 extern CircularBuffer circBufAllPckgs;
 
-volatile u16 buf_adc[8000] = {0};
-volatile u8  flag_adc = 0;
+volatile u16  buf_adc[ADC_BUF_SIZE + WINDOW_SIZE * ADC_CHAN_CNT] = {0};
+volatile u8   flag_adc = 0;
+adc_measure_t meas;
 
-void searchExtremums(adc_measure_t *meas);
+void calcBasicParams(adc_measure_t *meas);
+void searchAllMinMax(adc_measure_t *meas);
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
     if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
@@ -41,8 +43,6 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
 // u8 test = 0;
 
 void taskCurMeasure(void const *argument) {
-    u32           cnt = 0;
-    adc_measure_t meas;
     // vTaskSuspend(getCurrentHandle);
 
     // spiFlashInit(circBufAllPckgs.buf);
@@ -55,75 +55,98 @@ void taskCurMeasure(void const *argument) {
     // unLockTasks();
 
     osSemaphoreWait(semCurrMeasureHandle, 0);
-    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&buf_adc, 8000);
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&buf_adc, ADC_BUF_SIZE);
     HAL_TIM_Base_Start(&htim2);
+    LOG(LEVEL_MAIN, "ADC started\r\n");
 
-    meas.size = 1000;
+    memset(&meas, 0, sizeof(adc_measure_t));
+    meas.size = ADC_CHAN_BUF_SIZE;
 
     for (;;) {
         if (osSemaphoreWait(semCurrMeasureHandle, 2000) != osOK) {
             LOG(LEVEL_ERROR, "No ADC semaphore\r\n");
             continue;
         }
-        meas.sum = 0;
-        meas.min = 4096;
-        meas.max = 0;
-        if (flag_adc == 1) {
-            meas.p_buf = (u16 *)&buf_adc[0];
-        } else if (flag_adc == 2) {
-            meas.p_buf = (u16 *)&buf_adc[meas.size];
-        }
-        for (u16 i = 0; i < meas.size; i++) {
-            meas.sum += meas.p_buf[4 * i + 1];
-            if (meas.p_buf[4 * i + 1] > meas.max) meas.max = meas.p_buf[4 * i + 1];
-            if (meas.p_buf[4 * i + 1] < meas.min) meas.min = meas.p_buf[4 * i + 1];
-            // printf("%d\t%d\n", (cnt * meas.size + i), meas.p_buf[4 * i + 1]);
-        }
-        meas.avg = meas.sum / meas.size;
-        // LOG(LEVEL_INFO, "1 %d\t%d\t%d\r\n", meas.sum / meas.size, meas.min, meas.max);
-        bkte.pwrInfo.adcVoltBat = (u16)(meas.p_buf[0] * 3.3 * 2 / 4096 * 100);
-        cnt++;
-        // HAL_ADC_Stop_DMA(&hadc1);
-        searchExtremums(&meas);
+
+        calcBasicParams(&meas);
+        searchAllMinMax(&meas);
 
         iwdgTaskReg |= IWDG_TASK_CURR_MEASURE;
     }
 }
 
-void searchExtremums(adc_measure_t *meas) {
-    u16 max, min;
-    u16 idx_max, idx_min;
+void calcBasicParams(adc_measure_t *meas) {
+    u16         idx;
+    adc_chan_t *chan;
 
-    meas->ptr_max = 0;
-    meas->ptr_min = 0;
-    for (u16 i = 0; i < meas->size - 10; i = i + 5) {
-        min = 4096;
-        max = 0;
-        for (u16 k = 4 * i; k < 4 * (i + 10); k += 4) {
-            if (meas->p_buf[k + 1] > max) {
-                max = meas->p_buf[k + 1];
-                idx_max = k + 1;
-            }
-            if (meas->p_buf[k + 1] < min) {
-                min = meas->p_buf[k + 1];
-                idx_min = k + 1;
-            }
-        }
-        if (max > (meas->avg + 100) && idx_max > 4 * (i + 2) && idx_max < 4 * (i + 8) && meas->arr_max[meas->ptr_max] != idx_max) {
-            meas->ptr_max++;
-            meas->arr_max[meas->ptr_max] = idx_max;
-        }
-        if (min < (meas->avg - 100) && idx_min > 4 * (i + 2) && idx_min < 4 * (i + 8) && meas->arr_min[meas->ptr_min] != idx_min) {
-            meas->ptr_min++;
-            meas->arr_min[meas->ptr_min] = idx_min;
-        }
+    if (flag_adc == 1) {
+        meas->p_buf = (u16 *)&buf_adc[0];
+    } else if (flag_adc == 2) {
+        meas->p_buf = (u16 *)&buf_adc[meas->size * ADC_CHAN_CNT];
     }
-    // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);
-    printf("%d\t%d\t%d\t%d\t%d\t%d\r\n", meas->ptr_max, meas->ptr_min, meas->arr_max[1], meas->arr_max[2], meas->arr_min[1], meas->arr_min[2]);
-    // for (u16 i = 0; i < ptr_max; i++) {
-    //     printf("%d\r\n", arr_max[i]);
-    // }
-    // printf("\r\n");
+    for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
+        chan = &meas->chan[ch];
+        chan->sum = 0;
+        chan->min = ADC_MAX_VAL;
+        chan->max = ADC_MIN_VAL;
+        for (u16 i = 0; i < meas->size; i++) {
+            idx = ADC_CHAN_CNT * i + ch + 1;
+            chan->sum += meas->p_buf[idx];
+            if (meas->p_buf[idx] > chan->max) chan->max = meas->p_buf[idx];
+            if (meas->p_buf[idx] < chan->min) chan->min = meas->p_buf[idx];
+            // printf("%d\n", meas->p_buf[idx]);
+        }
+        chan->avg = chan->sum / meas->size;
+        // LOG(LEVEL_INFO, "1 %d\t%d\t%d\r\n", chan->sum / meas->size, chan->min, chan->max);
+    }
+    bkte.pwrInfo.adcVoltBat = (u16)(meas->p_buf[0] * 3.3 * 2 / ADC_MAX_VAL * 100);
+}
+
+void searchAllMinMax(adc_measure_t *meas) {
+    u16         idx;
+    u16         max, min;
+    u16         idx_max, idx_min;
+    u16         from, to;
+    adc_chan_t *chan;
+    u16         cnt = 0;
+
+    for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
+        chan = &meas->chan[ch];
+        chan->ptr_max = 0;
+        chan->ptr_min = 0;
+        for (u16 i = 0; i < meas->size - WINDOW_SIZE; i += WINDOW_STEP) {
+            cnt++;
+            min = ADC_MAX_VAL;
+            max = ADC_MIN_VAL;
+            for (u16 k = i; k < i + WINDOW_SIZE; k++) {
+                idx = ADC_CHAN_CNT * k + ch + 1;
+                if (meas->p_buf[idx] > max) {
+                    max = meas->p_buf[idx];
+                    idx_max = idx;
+                }
+                if (meas->p_buf[idx] < min) {
+                    min = meas->p_buf[idx];
+                    idx_min = idx;
+                }
+            }
+            from = ADC_CHAN_CNT * (i + 1);
+            to = ADC_CHAN_CNT * (i + WINDOW_SIZE - 1);
+            if (max > (s32)(chan->avg + ADC_MIN_MAX_DELTA) && idx_max > from && idx_max < to && chan->arr_max[chan->ptr_max] != idx_max) {
+                chan->ptr_max++;
+                chan->arr_max[chan->ptr_max] = idx_max;
+            }
+            if (min < (s32)(chan->avg - ADC_MIN_MAX_DELTA) && idx_min > from && idx_min < to && chan->arr_min[chan->ptr_min] != idx_min) {
+                chan->ptr_min++;
+                chan->arr_min[chan->ptr_min] = idx_min;
+            }
+        }
+        // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\r\n", chan->ptr_max, chan->ptr_min, chan->arr_max[1], chan->arr_max[2], chan->arr_min[1], chan->arr_min[2], cnt);
+        // for (u16 i = 0; i < ptr_max; i++) {
+        //     printf("%d\r\n", arr_max[i]);
+        // }
+        // printf("\r\n");
+    }
 }
 
 void unLockTasks() {
