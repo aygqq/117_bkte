@@ -16,6 +16,9 @@
 #define WINDOW_SIZE       15
 #define WINDOW_STEP       8
 
+#define CRANE_STOP 0
+#define CRANE_MOVE 1
+
 typedef struct {
     u32 sum;
     u32 avg;
@@ -33,6 +36,7 @@ typedef struct {
 typedef struct {
     u16* p_buf;
     u16  size;
+    u32  stopTime;
 
     adc_chan_t chan[ADC_CHAN_CNT - 1];
 } adc_measure_t;

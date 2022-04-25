@@ -25,25 +25,8 @@ void calcBasicParams(adc_measure_t *meas);
 void searchAllMinMax(adc_measure_t *meas);
 void saveMeasureData(adc_measure_t *meas);
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-    if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
-    {
-        flag_adc = 2;
-        osSemaphoreRelease(semCurrMeasureHandle);
-    }
-}
-
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
-    if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
-    {
-        flag_adc = 1;
-        osSemaphoreRelease(semCurrMeasureHandle);
-    }
-}
-
-// u8 test = 0;
-
 void taskCurMeasure(void const *argument) {
+    u32 numIteration = 0;
     // vTaskSuspend(getCurrentHandle);
 
     spiFlashInit(circBufAllPckgs.buf);
@@ -71,10 +54,57 @@ void taskCurMeasure(void const *argument) {
 
         calcBasicParams(&meas);
         searchAllMinMax(&meas);
-        saveMeasureData(&meas);
+        if (isCraneStopped(&meas) == CRANE_MOVE) {
+            // LOG(LEVEL_INFO, "Move save\r\n");
+            saveMeasureData(&meas);
+        } else {
+            if (!(numIteration % 30)) {
+                // LOG(LEVEL_INFO, "Stop save\r\n");
+                saveMeasureData(&meas);
+            }
+        }
+        numIteration++;
 
         iwdgTaskReg |= IWDG_TASK_CURR_MEASURE;
     }
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+    if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
+    {
+        flag_adc = 2;
+        osSemaphoreRelease(semCurrMeasureHandle);
+    }
+}
+
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc) {
+    if (hadc->Instance == ADC1)  // check if the interrupt comes from ACD1
+    {
+        flag_adc = 1;
+        osSemaphoreRelease(semCurrMeasureHandle);
+    }
+}
+
+u8 isCraneStopped(adc_measure_t *meas) {
+    adc_chan_t *chan;
+    u8          move = 0;
+
+    for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
+        chan = &meas->chan[ch];
+        if (chan->max > chan->avg + ADC_MIN_MAX_DELTA) {
+            move = 1;
+        }
+    }
+    if (move) {
+        meas->stopTime++;
+    } else {
+        meas->stopTime = 0;
+    }
+
+    if (meas->stopTime > 60) {
+        return CRANE_STOP;
+    }
+    return CRANE_MOVE;
 }
 
 void calcBasicParams(adc_measure_t *meas) {
@@ -138,6 +168,9 @@ void searchAllMinMax(adc_measure_t *meas) {
             if (min < (s32)(chan->avg - ADC_MIN_MAX_DELTA) && idx_min > from && idx_min < to && chan->arr_min[chan->ptr_min] != idx_min) {
                 chan->ptr_min++;
                 chan->arr_min[chan->ptr_min] = idx_min;
+            }
+            if (chan->ptr_max == 100 || chan->ptr_min == 100) {
+                break;
             }
         }
         // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);

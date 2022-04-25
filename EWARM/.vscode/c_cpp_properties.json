@@ -349,6 +349,9 @@
             ],
             "includePath": [
                 "..\\Core\\Inc",
+                "..\\Core\\Utils\\Inc",
+                "..\\Core\\Tasks\\Inc",
+                "..\\Core\\Drivers\\Inc",
                 "..\\FATFS\\Target",
                 "..\\FATFS\\App",
                 "..\\Drivers\\STM32F4xx_HAL_Driver\\Inc",

@@ -417,7 +417,10 @@
                 "c:\\MyProjects\\Project 121\\117_bkte\\Drivers\\CMSIS\\Include",
                 "C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc",
                 "C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\c",
-                "C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\cpp"
+                "C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.3\\arm\\inc\\cpp",
+                "C:\\MyProjects\\Project 121\\117_bkte\\Core\\Utils\\Inc",
+                "C:\\MyProjects\\Project 121\\117_bkte\\Core\\Tasks\\Inc",
+                "C:\\MyProjects\\Project 121\\117_bkte\\Core\\Drivers\\Inc"
             ],
             "forcedInclude": [],
             "cStandard": "c11",
