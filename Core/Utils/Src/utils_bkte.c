@@ -49,6 +49,9 @@ void bkteInit() {
     memcpy(bkte.info.niacIdent, id, 40);
     memset(&bkte.stat, 0, sizeof(statistics_t));
     memset(&bkte.timers, 0, sizeof(time_stat_t));
+
+    memset(&bkte.measure, 0, sizeof(adc_measure_t));
+    bkte.measure.size = ADC_CHAN_BUF_SIZE;
 }
 
 u32 getUnixTimeStamp() {

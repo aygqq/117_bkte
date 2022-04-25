@@ -17,10 +17,10 @@ extern osMutexId     mutexBigBufHandle;
 
 extern CircularBuffer circBufAllPckgs;
 
-volatile u16  buf_adc[ADC_BUF_SIZE + WINDOW_SIZE * ADC_CHAN_CNT] = {0};
-volatile u8   flag_adc = 0;
-adc_measure_t meas;
+volatile u16 buf_adc[ADC_BUF_SIZE + WINDOW_SIZE * ADC_CHAN_CNT] = {0};
+volatile u8  flag_adc = 0;
 
+u8   isCraneStopped(adc_measure_t *meas);
 void calcBasicParams(adc_measure_t *meas);
 void searchAllMinMax(adc_measure_t *meas);
 void saveMeasureData(adc_measure_t *meas);
@@ -43,24 +43,21 @@ void taskCurMeasure(void const *argument) {
     HAL_TIM_Base_Start(&htim2);
     LOG(LEVEL_MAIN, "ADC started\r\n");
 
-    memset(&meas, 0, sizeof(adc_measure_t));
-    meas.size = ADC_CHAN_BUF_SIZE;
-
     for (;;) {
         if (osSemaphoreWait(semCurrMeasureHandle, 2000) != osOK) {
             LOG(LEVEL_ERROR, "No ADC semaphore\r\n");
             continue;
         }
 
-        calcBasicParams(&meas);
-        searchAllMinMax(&meas);
-        if (isCraneStopped(&meas) == CRANE_MOVE) {
+        calcBasicParams(&bkte.measure);
+        searchAllMinMax(&bkte.measure);
+        if (isCraneStopped(&bkte.measure) == CRANE_MOVE) {
             // LOG(LEVEL_INFO, "Move save\r\n");
-            saveMeasureData(&meas);
+            saveMeasureData(&bkte.measure);
         } else {
             if (!(numIteration % 30)) {
                 // LOG(LEVEL_INFO, "Stop save\r\n");
-                saveMeasureData(&meas);
+                saveMeasureData(&bkte.measure);
             }
         }
         numIteration++;
@@ -95,11 +92,7 @@ u8 isCraneStopped(adc_measure_t *meas) {
             move = 1;
         }
     }
-    if (move) {
-        meas->stopTime++;
-    } else {
-        meas->stopTime = 0;
-    }
+    meas->stopTime = (move == 0) ? meas->stopTime++ : 0;
 
     if (meas->stopTime > 60) {
         return CRANE_STOP;
@@ -174,7 +167,7 @@ void searchAllMinMax(adc_measure_t *meas) {
             }
         }
         // printf("Max min %d\t%d\r\n", ptr_max, ptr_min);
-        printf("%d\t%d\t%d\t%d\t%d\t%d\r\n", chan->ptr_max, chan->ptr_min, chan->arr_max[1], chan->arr_max[2], chan->arr_min[1], chan->arr_min[2]);
+        // printf("%d\t%d\t%d\t%d\t%d\t%d\r\n", chan->ptr_max, chan->ptr_min, chan->arr_max[1], chan->arr_max[2], chan->arr_min[1], chan->arr_min[2]);
         // for (u16 i = 0; i < ptr_max; i++) {
         //     printf("%d\r\n", arr_max[i]);
         // }
@@ -186,13 +179,13 @@ void saveMeasureData(adc_measure_t *meas) {
     PckgAdcCurr pckgAdc;
 
     for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
-        pckgAdc.min[ch] = (u16)(meas->chan[ch].min * meas->chan[ch].coef);
-        pckgAdc.max[ch] = (u16)(meas->chan[ch].max * meas->chan[ch].coef);
-        pckgAdc.avg[ch] = (u16)(meas->chan[ch].avg * meas->chan[ch].coef);
-        if (meas->chan[ch].ptr_max > 0) {
-            pckgAdc.first_max[ch] = (meas->chan[ch].arr_max[1] - ch) / 4;
-        } else {
-            pckgAdc.first_max[ch] = 0;
+        pckgAdc.min[ch] = (s16)((meas->chan[ch].min - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);
+        pckgAdc.max[ch] = (s16)((meas->chan[ch].max - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);
+        pckgAdc.avg[ch] = (s16)((meas->chan[ch].avg - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);
+        pckgAdc.cnt_max[ch] = meas->chan[ch].ptr_max;
+        pckgAdc.first_max[ch] = pckgAdc.cnt_max > 0 ? (meas->chan[ch].arr_max[1] - ch) / 4 : 0;
+        if (ch == 0) {
+            LOG(LEVEL_INFO, "Chan %d: %d\t%d\t%d\t%d\t%d\r\n", ch, pckgAdc.min[ch], pckgAdc.max[ch], pckgAdc.avg[ch], pckgAdc.cnt_max[ch], pckgAdc.first_max[ch]);
         }
     }
     saveData((u8 *)&pckgAdc, SZ_CMD_ADC_CURR, CMD_DATA_ADC_CURR, &circBufAllPckgs);

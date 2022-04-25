@@ -154,7 +154,7 @@ void Error_Handler(void);
 #define SZ_CMD_VOLTAMPER 8
 #define SZ_CMD_TEMP      8
 #define SZ_CMD_TELEMETRY 10
-#define SZ_CMD_ADC_CURR  28
+#define SZ_CMD_ADC_CURR  34
 
 #define SZ_PAGE          255
 #define CNT_PAGES        2

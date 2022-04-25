@@ -42,6 +42,8 @@ void spiFlashInit(u8 *buf) {
 
     bkte.state.isSpiFlashReady = 0;
 
+    memset((u8 *)badPgMap, 0, sizeof(badPgMap));
+
     osMutexRelease(mutexSpiFlashHandle);
 
     spiFlashLoadInfo(buf);
@@ -274,29 +276,39 @@ u16 getDelayPages() {
 
 void spiFlashSaveInfo() {
     u32 addr;
-    u8  buf[32];
+    u8  buf[33];
 
     spiFlashWriteMap();
 
     osMutexWait(mutexSpiFlashHandle, 60000);
 
-    memset(buf, 0, 32);
+    memset(buf, 0, 33);
     memcpy(&buf[0], &spiFlash64.headNumPg, 4);
     memcpy(&buf[4], &spiFlash64.tailNumPg, 4);
+
+    memcpy(&buf[8], &bkte.measure.calibr[0].coef, 4);
+    memcpy(&buf[12], &bkte.measure.calibr[0].zero_lvl, 2);
+    memcpy(&buf[14], &bkte.measure.calibr[1].coef, 4);
+    memcpy(&buf[18], &bkte.measure.calibr[1].zero_lvl, 2);
+    memcpy(&buf[20], &bkte.measure.calibr[2].coef, 4);
+    memcpy(&buf[24], &bkte.measure.calibr[2].zero_lvl, 2);
+
     buf[31] = 0x01;
+    buf[32] = 0x01;
 
     spiFlashES(BKTE_SAVE_NUM_PAGE / SPIFLASH_NUM_PG_IN_SEC);
 
     LOG_FLASH(LEVEL_INFO, "Save pages: head %d, tail %d\r\n", spiFlash64.headNumPg, spiFlash64.tailNumPg);
 
     addr = (BKTE_SAVE_NUM_PAGE * spiFlash64.pgSz);
-    spiFlashWrPg(buf, 32, addr);
+    spiFlashWrPg(buf, 33, addr);
 
     osMutexRelease(mutexSpiFlashHandle);
 }
 
 void spiFlashLoadInfo(u8 *buf) {
     u8  isMapInFlash;
+    u8  isCalibrInFlash;
     u32 tmp;
     u32 addr;
 
@@ -312,6 +324,7 @@ void spiFlashLoadInfo(u8 *buf) {
     LOG_FLASH(LEVEL_INFO, "Read tailNumPg: %d\r\n", spiFlash64.tailNumPg);
 
     isMapInFlash = buf[31];
+    isCalibrInFlash = buf[32];
 
     if (spiFlash64.headNumPg > SPIFLASH_NUM_PG_GNSS || spiFlash64.tailNumPg > SPIFLASH_NUM_PG_GNSS) {
         spiFlash64.headNumPg = 0;
@@ -319,6 +332,24 @@ void spiFlashLoadInfo(u8 *buf) {
         osMutexWait(mutexSpiFlashHandle, 60000);
         spiFlashES(spiFlash64.headNumPg / SPIFLASH_NUM_PG_IN_SEC);
         osMutexRelease(mutexSpiFlashHandle);
+    }
+
+    if (isCalibrInFlash == 0x01) {
+        for (u8 i = 0; i < ADC_CHAN_CNT - 1; i++) {
+            memcpy(&bkte.measure.calibr[i].coef, &buf[8 + 6 * i], 4);
+            memcpy(&bkte.measure.calibr[i].zero_lvl, &buf[8 + 6 * i + 4], 2);
+            if (bkte.measure.calibr[i].coef > 10.0 || bkte.measure.calibr[i].zero_lvl > 4096) {
+                bkte.measure.calibr[i].coef = ADC_CALIBR_DEFAULT_COEF;
+                bkte.measure.calibr[i].zero_lvl = ADC_CALIBR_DEFAULT_ZERO;
+            }
+            LOG_FLASH(LEVEL_INFO, "Read calibr %d: %f, %d\r\n", i, bkte.measure.calibr[i].coef, bkte.measure.calibr[i].zero_lvl);
+        }
+    } else {
+        for (u8 i = 0; i < ADC_CHAN_CNT - 1; i++) {
+            bkte.measure.calibr[i].coef = ADC_CALIBR_DEFAULT_COEF;
+            bkte.measure.calibr[i].zero_lvl = ADC_CALIBR_DEFAULT_ZERO;
+            LOG_FLASH(LEVEL_INFO, "Default calibr %d: %f, %d\r\n", i, bkte.measure.calibr[i].coef, bkte.measure.calibr[i].zero_lvl);
+        }
     }
 
     memset((u8 *)badPgMap, 0, sizeof(badPgMap));

@@ -16,6 +16,7 @@
 #include "simcom.h"
 #include "spiflash.h"
 #include "stdlib.h"
+#include "task_curr_measure.h"
 #include "time.h"
 #include "usart.h"
 #include "version.h"
@@ -154,10 +155,11 @@ typedef struct {
     PWRInfo        pwrInfo;
     ErrorFlags     erFlags;
 
-    bkte_state_t state;
-    bkte_info_t  info;
-    time_stat_t  timers;
-    statistics_t stat;
+    bkte_state_t  state;
+    bkte_info_t   info;
+    time_stat_t   timers;
+    statistics_t  stat;
+    adc_measure_t measure;
 } BKTE;
 
 typedef enum {
@@ -266,9 +268,10 @@ typedef __packed struct {
 
 typedef __packed struct {
     u32 unixTimeStamp;
-    u16 min[3];
-    u16 max[3];
-    u16 avg[3];
+    s16 min[3];
+    s16 max[3];
+    s16 avg[3];
+    u16 cnt_max[3];
     u16 first_max[3];
 } PckgAdcCurr;
 

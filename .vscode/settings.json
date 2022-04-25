@@ -3,17 +3,20 @@
         "utils_bkte.h": "c",
         "utils_pckgs_manager.h": "c",
         "usart.h": "c",
-        "ds2482.h": "c",
-        "task_wireless_sens.h": "c",
         "circularbuffer.h": "c",
         "utils_crc.h": "c",
         "cmsis_os.h": "c",
         "utils_sd.h": "c",
         "task_get_new_bin.h": "c",
         "main.h": "c",
+        "debug.h": "c",
+        "spiflash.h": "c",
         "task_get_energy.h": "c",
         "task_create_webpckg.h": "c",
         "utils_flash.h": "c",
         "task_keep_alive.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "EnabledIfIncludesResolve",
+    "iar.enabled": true,
+    "C_Cpp.autoAddFileAssociations": true
 }
