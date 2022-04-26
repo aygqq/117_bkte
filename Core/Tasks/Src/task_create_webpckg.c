@@ -115,10 +115,10 @@ void parseData(u8 *tmpBufPage, u8 len) {
                 break;
             case CMD_DATA_ADC_CURR:
                 addToPage(&pgAdcCurr, &tmpBufPage[i + 1], SZ_CMD_ADC_CURR);
-                i += (SZ_CMD_TELEMETRY + 1);
+                i += (SZ_CMD_ADC_CURR + 1);
                 break;
             default:
-                LOG_WEB(LEVEL_ERROR, "ER: CMD_DATA_X is wrong\r\n");
+                LOG_WEB(LEVEL_ERROR, "ER: CMD_DATA_X is wrong %d\r\n", tmpBufPage[i]);
                 return;
                 break;
         }

@@ -31,12 +31,12 @@ void taskCurMeasure(void const *argument) {
 
     spiFlashInit(circBufAllPckgs.buf);
     cBufReset(&circBufAllPckgs);
-    // sdInit();
-    // simInit();
-    // while (getServerTime() != SUCCESS) {};
+    sdInit();
+    simInit();
+    while (getServerTime() != SUCCESS) {};
 
-    // sendInitTelemetry();
-    // unLockTasks();
+    sendInitTelemetry();
+    unLockTasks();
 
     osSemaphoreWait(semCurrMeasureHandle, 0);
     HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&buf_adc, ADC_BUF_SIZE);
@@ -184,9 +184,9 @@ void saveMeasureData(adc_measure_t *meas) {
         pckgAdc.avg[ch] = (s16)((meas->chan[ch].avg - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);
         pckgAdc.cnt_max[ch] = meas->chan[ch].ptr_max;
         pckgAdc.first_max[ch] = pckgAdc.cnt_max > 0 ? (meas->chan[ch].arr_max[1] - ch) / 4 : 0;
-        if (ch == 0) {
-            LOG(LEVEL_INFO, "Chan %d: %d\t%d\t%d\t%d\t%d\r\n", ch, pckgAdc.min[ch], pckgAdc.max[ch], pckgAdc.avg[ch], pckgAdc.cnt_max[ch], pckgAdc.first_max[ch]);
-        }
+        // if (ch == 0) {
+        //     LOG(LEVEL_INFO, "Chan %d: %d\t%d\t%d\t%d\t%d\r\n", ch, pckgAdc.min[ch], pckgAdc.max[ch], pckgAdc.avg[ch], pckgAdc.cnt_max[ch], pckgAdc.first_max[ch]);
+        // }
     }
     saveData((u8 *)&pckgAdc, SZ_CMD_ADC_CURR, CMD_DATA_ADC_CURR, &circBufAllPckgs);
 }

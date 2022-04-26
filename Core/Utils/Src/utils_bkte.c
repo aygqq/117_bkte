@@ -44,7 +44,7 @@ void bkteInit() {
     bkte.erFlags.errReg = 0;
     bkte.info.fw.idFirmware = BKTE_ID_FIRMWARE;
     bkte.info.fw.idBoot = BKTE_ID_BOOT;
-    bkte.info.server = SERVER_NIAC;
+    bkte.info.server = SERVER_MOTZ;
     u8 id[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
     memcpy(bkte.info.niacIdent, id, 40);
     memset(&bkte.stat, 0, sizeof(statistics_t));

@@ -134,16 +134,14 @@ void makeEndSessionPckg(WebPckg* pPckg, u8 server) {
 }
 
 WebPckg* createWebPckgReq(u8 CMD_REQ, u8* data, u8 sz, u8 szReq, u8* idMCU) {
-    u8       req[10];
+    u8       req[2];
     WebPckg* curPckg;
     req[0] = CMD_REQ;
     req[1] = 1;
     curPckg = getFreePckg();
     initWebPckg(curPckg, szReq, 1, idMCU, SERVER_MOTZ);
-    if (sz) {
-        memcpy(req + 2, data, sz);
-    }
-    addInfo(curPckg, req, szReq);
+    addInfo(curPckg, req, 2);
+    addInfo(curPckg, data, sz);
     closeWebPckg(curPckg, SERVER_MOTZ);
     // showWebPckg(curPckg);
     return curPckg;
@@ -151,7 +149,7 @@ WebPckg* createWebPckgReq(u8 CMD_REQ, u8* data, u8 sz, u8 szReq, u8* idMCU) {
 
 ErrorStatus sendWebPckgData(u8 CMD_DATA, u8* data, u8 sz, u8 szReq, u8* idMCU) {
     WebPckg*    curPckg;
-    u8          req[64];
+    u8          req[2];
     ErrorStatus ret = SUCCESS;
 
     osMutexWait(mutexSessionHandle, osWaitForever);
@@ -160,10 +158,8 @@ ErrorStatus sendWebPckgData(u8 CMD_DATA, u8* data, u8 sz, u8 szReq, u8* idMCU) {
     req[1] = szReq;
     if ((curPckg = getFreePckgReq()) != NULL) {
         initWebPckg(curPckg, sz + 2, 0, (u8*)&bkte.info.idMCU, SERVER_MOTZ);
-        if (sz) {
-            memcpy(req + 2, data, sz);
-        }
-        addInfo(curPckg, req, sz + 2);
+        addInfo(curPckg, req, 2);
+        addInfo(curPckg, data, sz);
         closeWebPckg(curPckg, SERVER_MOTZ);
         // showWebPckg(curPckg);
 
@@ -188,7 +184,7 @@ ErrorStatus sendWebPckgData(u8 CMD_DATA, u8* data, u8 sz, u8 szReq, u8* idMCU) {
 ErrorStatus generateWebPckgReq(u8 CMD_REQ, u8* data, u8 sz, u8 szReq, u8* answ, u16 szAnsw, u8* idMCU) {
     ErrorStatus ret = SUCCESS;
     u8          statSend;
-    u8          req[10];
+    u8          req[2];
     WebPckg*    curPckg;
 
     osMutexWait(mutexSessionHandle, osWaitForever);
@@ -198,10 +194,8 @@ ErrorStatus generateWebPckgReq(u8 CMD_REQ, u8* data, u8 sz, u8 szReq, u8* answ, 
     req[1] = 1;
     if ((curPckg = getFreePckgReq()) != NULL) {
         initWebPckg(curPckg, szReq, 1, idMCU, SERVER_MOTZ);
-        if (sz) {
-            memcpy(req + 2, data, sz);
-        }
-        addInfo(curPckg, req, szReq);
+        addInfo(curPckg, req, 2);
+        addInfo(curPckg, data, sz);
         closeWebPckg(curPckg, SERVER_MOTZ);
         // showWebPckg(curPckg);
 
