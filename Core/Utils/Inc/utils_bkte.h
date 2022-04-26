@@ -185,7 +185,7 @@ typedef enum {
     TEL_GR_SIMCOM,
     TEL_GR_PROJECT_RADIO_STAT,
     TEL_GR_BKTE_STAT,
-    TEL_GR_COMMON = 0x10
+    TEL_GR_CRANE = 0x10
 } TELEMETRY_GROUP;
 
 typedef enum {
@@ -229,7 +229,9 @@ typedef enum {
     TEL_CD_BKTE_PAGE_WR = 4,
     TEL_CD_BKTE_PAGE_RD,
     TEL_CD_BKTE_PAGE_BAD,
-    TEL_CD_BKTE_PAGE_FROM_IU
+    TEL_CD_BKTE_PAGE_FROM_IU,
+    TEL_CD_BKTE_PAGE_HEAD,
+    TEL_CD_BKTE_PAGE_TAIL
 } TELEMETRY_CODE_MEM;
 
 typedef enum {
@@ -251,6 +253,10 @@ typedef enum {
     TEL_CD_SIM_GPS_TIMESYNC,
     TEL_CD_SIM_GPS_RESET
 } TELEMETRY_CODE_SIMCOM;
+
+typedef enum {
+    TEL_CD_CRANE_MOVE = 1,
+} TELEMETRY_CODE_CRANE;
 
 typedef enum {
     CMD_REQUEST_SERVER_TIME = 0x11,

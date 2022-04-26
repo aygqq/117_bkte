@@ -388,6 +388,7 @@ u8 sendTcp(u8 server, u8* data, u16 sz) {
     u8 ret = TCP_OK;
     u8 cnt = 0;
     // static u32 count = 0;
+    HAL_GPIO_WritePin(LED4G_GPIO_Port, LED4G_Pin, GPIO_PIN_RESET);
     while (bkte.state.isTCPOpen != server) {
         if (cnt == 15) {
             ret = TCP_CONNECT_ER;
@@ -408,9 +409,12 @@ u8 sendTcp(u8 server, u8* data, u16 sz) {
     // if (!(count % 7)) {
     //     ret = TCP_SEND_ER;
     // }
+    HAL_GPIO_WritePin(LED4G_GPIO_Port, LED4G_Pin, GPIO_PIN_SET);
     if (ret == TCP_OK) {
+        HAL_GPIO_WritePin(LED4R_GPIO_Port, LED4R_Pin, GPIO_PIN_SET);
         bkte.stat.simSendCnt++;
     } else {
+        HAL_GPIO_WritePin(LED4R_GPIO_Port, LED4R_Pin, GPIO_PIN_RESET);
         bkte.stat.simErrCnt++;
     }
     if (bkte.state.csq < 15) {

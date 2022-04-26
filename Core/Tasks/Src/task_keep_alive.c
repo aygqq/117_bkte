@@ -301,14 +301,14 @@ ErrorStatus sendMsgTaskStat() {
     pckgTel.data = bkte.stat.web_exchng;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    // pckgTel.group = TEL_GR_HARDWARE_STATUS;
-    // pckgTel.code = (u8)14;
-    // pckgTel.data = spiFlash64.headNumPg;
-    // copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+    pckgTel.group = TEL_GR_PROJECT_MEM;
+    pckgTel.code = TEL_CD_BKTE_PAGE_HEAD;
+    pckgTel.data = spiFlash64.headNumPg;
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    // pckgTel.code = (u8)15;
-    // pckgTel.data = spiFlash64.tailNumPg;
-    // copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
+    pckgTel.code = TEL_CD_BKTE_PAGE_TAIL;
+    pckgTel.data = spiFlash64.tailNumPg;
+    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
     ret = sendWebPckgData(CMD_DATA_TELEMETRY, bufTxData, SZ_CMD_TELEMETRY * ptr, ptr, (u8*)&bkte.info.idMCU);
 
@@ -386,6 +386,14 @@ ErrorStatus sendMsgStatistics() {
 
     pckgTel.code = TEL_CD_BKTE_PAGE_BAD;
     pckgTel.data = bkte.stat.pageBadCount;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_BKTE_PAGE_HEAD;
+    pckgTel.data = spiFlash64.headNumPg;
+    saveTelemetry(&pckgTel, &circBufAllPckgs);
+
+    pckgTel.code = TEL_CD_BKTE_PAGE_TAIL;
+    pckgTel.data = spiFlash64.tailNumPg;
     saveTelemetry(&pckgTel, &circBufAllPckgs);
 
     pckgTel.group = TEL_GR_SIMCOM;
@@ -485,10 +493,6 @@ ErrorStatus sendInitTelemetry() {
     pckgTel.data = bkte.hwStat.isFatMount;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    pckgTel.code = TEL_CD_HW_DS2482;
-    pckgTel.data = bkte.hwStat.isDS2482;
-    copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
-
     pckgTel.code = TEL_CD_HW_SPI_FLASH;
     pckgTel.data = bkte.hwStat.isSPIFlash;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
@@ -499,12 +503,12 @@ ErrorStatus sendInitTelemetry() {
     pckgTel.data = tmp;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    pckgTel.group = TEL_GR_HARDWARE_STATUS;
-    pckgTel.code = (u8)14;
+    pckgTel.group = TEL_GR_PROJECT_MEM;
+    pckgTel.code = TEL_CD_BKTE_PAGE_HEAD;
     pckgTel.data = spiFlash64.headNumPg;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 
-    pckgTel.code = (u8)15;
+    pckgTel.code = TEL_CD_BKTE_PAGE_TAIL;
     pckgTel.data = spiFlash64.tailNumPg;
     copyTelemetry(&bufTxData[SZ_CMD_TELEMETRY * ptr++], &pckgTel);
 

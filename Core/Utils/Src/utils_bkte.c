@@ -25,6 +25,7 @@ static RTC_TimeTypeDef    tmpTime;
 static RTC_DateTypeDef    tmpDate;
 
 void bkteInit() {
+    offAllLeds();
     HAL_GPIO_WritePin(SD_PWR_EN_GPIO_Port, SD_PWR_EN_Pin, GPIO_PIN_RESET);
 
     HAL_GPIO_WritePin(BAT_PWR_EN_GPIO_Port, BAT_PWR_EN_Pin, GPIO_PIN_SET);

@@ -40,6 +40,7 @@ void taskGetNewBin(void const* argument) {
     LOG(LEVEL_MAIN, "taskGetNewBin\r\n");
 
     lockAllTasks();
+    offAllLeds();
     isRxNewFirmware = 1;
     osTimerStop(timerPowerOffHandle);
 

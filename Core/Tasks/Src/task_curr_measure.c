@@ -106,8 +106,10 @@ void calcBasicParams(adc_measure_t *meas) {
 
     if (flag_adc == 1) {
         meas->p_buf = (u16 *)&buf_adc[0];
+        HAL_GPIO_TogglePin(LED2G_GPIO_Port, LED2G_Pin);
     } else if (flag_adc == 2) {
         meas->p_buf = (u16 *)&buf_adc[meas->size * ADC_CHAN_CNT];
+        HAL_GPIO_TogglePin(LED2R_GPIO_Port, LED2R_Pin);
     }
     for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
         chan = &meas->chan[ch];
