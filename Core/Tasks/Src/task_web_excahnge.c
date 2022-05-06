@@ -109,6 +109,7 @@ void taskWebExchange(void const* argument) {
             case SESSION_TCP_CLOSING:
                 if (!bkte.state.isTCPOpen) {
                     sessionStep = SESSION_OPENING;
+                    osSemaphoreWait(semSendWebPckgHandle, 0);
                     LOG_WEB(LEVEL_INFO, "---} Finish sending DATA\r\n");
                 } else {
                     osMutexWait(mutexWebHandle, osWaitForever);

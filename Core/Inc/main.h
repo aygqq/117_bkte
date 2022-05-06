@@ -131,14 +131,6 @@ void Error_Handler(void);
 #include "stdlib.h"
 #include "string.h"
 
-// #define DEBUG 1
-
-#if DEBUG
-#define D(x) x
-#else
-#define D(x)
-#endif
-
 #define LOG_SZ_ERROR 100
 #define WAIT_TIMEOUT 15000
 #define DUMMY_BYTE   0xFF

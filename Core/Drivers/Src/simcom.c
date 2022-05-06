@@ -179,10 +179,6 @@ u8 simTCPclose() {
 }
 
 u8 simTCPinit() {
-    // if (simCmd(SIM_CIPSHUT, NULL, 3, SIM_OK_CIPSHUT) != SIM_SUCCESS) {
-    //     return SIM_FAIL;
-    // }
-
     if (simCmd(SIM_CGATT, "1", 3, SIM_OK_TEXT) != SIM_SUCCESS) {
         return SIM_FAIL;
     }
@@ -264,10 +260,6 @@ u8 simTCPSend(u8* data, u16 sz) {
         return SIM_FAIL;
     }
     retMsg = simDownloadData(data, sz);
-    // if (bkte.info.server == SERVER_NIAC) {
-    //     waitIdle("", &(uInfoSim.irqFlags), 50, 1000);
-    // }
-    // LOG_SIM(LEVEL_INFO, "Send Ret: %s\r\n", retMsg);
     token = strtok(retMsg, SIM_SEPARATOR_TEXT);
     if (token == NULL || token[0] == '\0') token = SIM_NO_RESPONSE_TEXT;
 
@@ -387,7 +379,7 @@ u8 closeTcp() {
 u8 sendTcp(u8 server, u8* data, u16 sz) {
     u8 ret = TCP_OK;
     u8 cnt = 0;
-    // static u32 count = 0;
+
     HAL_GPIO_WritePin(LED4G_GPIO_Port, LED4G_Pin, GPIO_PIN_RESET);
     while (bkte.state.isTCPOpen != server) {
         if (cnt == 15) {
@@ -397,18 +389,11 @@ u8 sendTcp(u8 server, u8* data, u16 sz) {
         cnt++;
         ret = openTcp(server);
     }
-    // if (ret == TCP_OK && !waitGoodCsq(90)) {
-    //     LOG_SIM(LEVEL_ERROR, "waitGoodCsq\r\n");
-    //     ret = TCP_CSQ_ER;
-    // }
     if (ret == TCP_OK && simTCPSend(data, sz) != SIM_SUCCESS) {
         LOG_SIM(LEVEL_ERROR, "simTCPSend\r\n");
         ret = TCP_SEND_ER;
     }
-    // count++;
-    // if (!(count % 7)) {
-    //     ret = TCP_SEND_ER;
-    // }
+
     HAL_GPIO_WritePin(LED4G_GPIO_Port, LED4G_Pin, GPIO_PIN_SET);
     if (ret == TCP_OK) {
         HAL_GPIO_WritePin(LED4R_GPIO_Port, LED4R_Pin, GPIO_PIN_SET);

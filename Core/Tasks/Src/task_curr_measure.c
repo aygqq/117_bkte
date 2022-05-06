@@ -113,7 +113,7 @@ void calcBasicParams(adc_measure_t *meas) {
     }
     for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
         chan = &meas->chan[ch];
-        chan->sum = 0;
+        memset((u8 *)chan, 0, sizeof(adc_chan_t));
         chan->min = ADC_MAX_VAL;
         chan->max = ADC_MIN_VAL;
         for (u16 i = 0; i < meas->size; i++) {
@@ -164,7 +164,7 @@ void searchAllMinMax(adc_measure_t *meas) {
                 chan->ptr_min++;
                 chan->arr_min[chan->ptr_min] = idx_min;
             }
-            if (chan->ptr_max == 100 || chan->ptr_min == 100) {
+            if (chan->ptr_max == 60 || chan->ptr_min == 60) {
                 break;
             }
         }
@@ -180,6 +180,7 @@ void searchAllMinMax(adc_measure_t *meas) {
 void saveMeasureData(adc_measure_t *meas) {
     PckgAdcCurr pckgAdc;
 
+    pckgAdc.unixTimeStamp = getUnixTimeStamp();
     for (u8 ch = 0; ch < ADC_CHAN_CNT - 1; ch++) {
         pckgAdc.min[ch] = (s16)((meas->chan[ch].min - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);
         pckgAdc.max[ch] = (s16)((meas->chan[ch].max - meas->calibr[ch].zero_lvl) * meas->calibr[ch].coef);

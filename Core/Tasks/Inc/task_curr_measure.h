@@ -26,8 +26,8 @@ typedef struct {
     u16 min;
     u16 max;
 
-    u16 arr_max[100];
-    u16 arr_min[100];
+    u16 arr_max[60];
+    u16 arr_min[60];
     u16 ptr_max;
     u16 ptr_min;
 } adc_chan_t;

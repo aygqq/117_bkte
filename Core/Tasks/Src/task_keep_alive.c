@@ -40,7 +40,7 @@ void taskKeepAlive(void const* argument) {
             osTimerStop(timerPowerOffHandle);
         }
         if (!(timeout % 6000) && !isRxNewFirmware) {
-            LOG(LEVEL_MAIN, "\r\ngenerateMsgKeepAlive\r\n\r\n");
+            LOG(LEVEL_MAIN, "\r\nKeepAlive\r\n\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
             generateMsgKeepAlive();
             osTimerStop(timerPowerOffHandle);
@@ -194,7 +194,7 @@ void generateMsgKeepAlive() {
     pckgTel.data = 0;
     saveTelemetry(&pckgTel, &circBufAllPckgs);
 
-    sdWriteLog(SD_MSG_KEEP_ALIVE, SD_LEN_KEEP_ALIVE, NULL, 0, &sdSectorLogs);
+    // sdWriteLog(SD_MSG_KEEP_ALIVE, SD_LEN_KEEP_ALIVE, NULL, 0, &sdSectorLogs);
 }
 
 void generateMsgBat() {
