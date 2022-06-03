@@ -11,6 +11,7 @@
 #define ADC_MAX_VAL       0x0FFFU
 #define ADC_MIN_VAL       0x0U
 #define ADC_MIN_MAX_DELTA 100
+#define ADC_MAX_BOUND     50
 #define WINDOW_SIZE       15
 #define WINDOW_STEP       8
 
@@ -26,10 +27,18 @@ typedef struct {
     u16 min;
     u16 max;
 
-    u16 arr_max[60];
-    u16 arr_min[60];
-    u16 ptr_max;
-    u16 ptr_min;
+    u16 min_min;
+    u16 max_min;
+    u16 min_max;
+    u16 max_max;
+
+    u16 p_max[100];
+    u16 p_min[100];
+    u16 cnt_max;
+    u16 cnt_min;
+
+    u16 p_zero[100];
+    u16 cnt_zero;
 } adc_chan_t;
 
 typedef struct {

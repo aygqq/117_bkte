@@ -256,6 +256,8 @@ typedef enum {
 
 typedef enum {
     TEL_CD_CRANE_MOVE = 1,
+    TEL_CD_CRANE_TIME_ERR,
+    TEL_CD_CRANE_PERIOD_ERR
 } TELEMETRY_CODE_CRANE;
 
 typedef enum {
@@ -267,9 +269,9 @@ typedef enum {
 
 typedef __packed struct {
     u32 unixTimeStamp;
-    u32 data;
     u8  group;
     u8  code;
+    u32 data;
 } PckgTelemetry;
 
 typedef __packed struct {

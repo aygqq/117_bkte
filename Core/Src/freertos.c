@@ -65,6 +65,7 @@ osMutexId     mutexRTCHandle;
 osMutexId     mutexSDHandle;
 osMutexId     mutexSpiFlashHandle;
 osMutexId     mutexSessionHandle;
+osMutexId     mutexCurrMeasureHandle;
 osSemaphoreId semCreateWebPckgHandle;
 osSemaphoreId semSendWebPckgHandle;
 osSemaphoreId semCurrMeasureHandle;
@@ -148,6 +149,10 @@ void MX_FREERTOS_Init(void) {
     osMutexDef(mutexSession);
     mutexSessionHandle = osMutexCreate(osMutex(mutexSession));
 
+    /* definition and creation of mutexCurrMeasure */
+    osMutexDef(mutexCurrMeasure);
+    mutexCurrMeasureHandle = osMutexCreate(osMutex(mutexCurrMeasure));
+
     /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
     /* USER CODE END RTOS_MUTEX */
@@ -189,7 +194,7 @@ void MX_FREERTOS_Init(void) {
 
     /* Create the thread(s) */
     /* definition and creation of getCurrent */
-    osThreadDef(getCurrent, taskCurMeasure, osPriorityNormal, 0, 400);
+    osThreadDef(getCurrent, taskCurMeasure, osPriorityNormal, 0, 300);
     getCurrentHandle = osThreadCreate(osThread(getCurrent), NULL);
 
     /* definition and creation of getNewBin */

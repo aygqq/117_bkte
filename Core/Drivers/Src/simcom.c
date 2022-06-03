@@ -41,7 +41,7 @@ void simInit() {
             }
         } else {
             bkte.erFlags.simAT = 0;
-            osDelay(5000);
+            osDelay(7000);
             if (SIM_GPS_INIT() != SIM_SUCCESS) {
                 fail++;
                 bkte.erFlags.simSAPBR = 1;
@@ -88,7 +88,7 @@ u8 simCmd(char* cmdCode, char* params, u8 retriesCnt, char* SUCCESS_RET) {
         sprintf((char*)simBufCmd, "AT+%s=%s\r\n", cmdCode, params);
     }
     for (; retriesCnt > 0; --retriesCnt) {
-        retMsg = simTxATCmd(simBufCmd, strlen(simBufCmd), 20000);
+        retMsg = simTxATCmd(simBufCmd, strlen(simBufCmd), 25000);
         token = strtok(retMsg, SIM_SEPARATOR_TEXT);
         if (token == NULL || token[0] == '\0') token = SIM_NO_RESPONSE_TEXT;
         if (SUCCESS_RET != NULL && strcmp((const char*)token, (const char*)SUCCESS_RET)) {

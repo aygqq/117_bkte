@@ -33,7 +33,7 @@ void taskKeepAlive(void const* argument) {
             sendMsgStatistics();
             osTimerStop(timerPowerOffHandle);
         }
-        if (!(timeout % 600) && !isRxNewFirmware) {
+        if (!(timeout % 3000) && !isRxNewFirmware) {
             LOG(LEVEL_MAIN, "getBKTENumFw\r\n\r\n");
             osTimerStart(timerPowerOffHandle, 1100000);
             getNumFirmware();

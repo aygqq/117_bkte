@@ -137,8 +137,8 @@ void Error_Handler(void);
 
 #define SERVER_MOTZ       1
 #define SERVER_NIAC       2
-#define URL_TCP_ADDR      (char*)"188.242.176.25"
-#define URL_TCP_PORT      8086
+#define URL_TCP_ADDR      (char*)"idim772.ru"
+#define URL_TCP_PORT      8103
 #define URL_NIAC_TCP_ADDR (char*)"gis.ru.net"
 #define URL_NIAC_TCP_PORT 9878
 
