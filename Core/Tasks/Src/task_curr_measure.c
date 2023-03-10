@@ -342,6 +342,7 @@ void saveMeasureData(adc_measure_t *meas) {
         // }
         saveData((u8 *)&pckgAdc, SZ_CMD_ADC_CURR, CMD_DATA_ADC_CURR, &circBufAllPckgs);
     }
+}
 #endif
 
 void unLockTasks() {
